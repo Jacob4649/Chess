@@ -2,7 +2,8 @@ package chess.renderer.panel;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.ImageObserver;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ import chess.renderer.RenderConstants;
 public class BoardPanel extends JPanel {
 
 	protected Board m_board;
+	protected int[] m_mouseClickPos = new int[] {0, 0};
 	
 	/**
 	 * Creates a new render panel that displays the board
@@ -23,6 +25,12 @@ public class BoardPanel extends JPanel {
 		m_board = board;
 		setBorder(BorderFactory.createLineBorder(RenderConstants.BOARD_BORDER_COLOR));
 		setBackground(RenderConstants.BOARD_LIGHT_COLOR);
+		
+		addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				
+			}
+		}); 
 	}
 	
 	@Override
@@ -73,6 +81,16 @@ public class BoardPanel extends JPanel {
 	 */
 	protected int verticalPosToInt(int vert) {
 		return ((int) (((double) vert/(double) EngineConstants.BOARD_SIZE)*RenderConstants.PANEL_VERTICAL));
-	}	
+	}
+	
+	/**
+	 * Gets the chess tile that the cursor is over
+	 * @param hor the horizontal pixel
+	 * @param vert the vertical pixel
+	 * @return an array containing the horizontal and vertical indeces
+	 */
+	protected int[] pixelToPos(int hor, int vert) {
+		return new int[] {(int) Math.floor(hor / (RenderConstants.PANEL_HORIZONTAL / EngineConstants.BOARD_SIZE)), (int) Math.floor(vert / (RenderConstants.PANEL_VERTICAL / EngineConstants.BOARD_SIZE))};
+	}
 	
 }
