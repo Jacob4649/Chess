@@ -2,6 +2,8 @@ package chess.engine.moves;
 
 import java.util.ArrayList;
 
+import chess.Chess;
+
 /**
  * Represents a type of move that a piece can make
  * @author Jacob
@@ -19,8 +21,18 @@ public abstract class MoveTemplate {
 	
 	protected static double[] m_moveStrengthArray; //array of the multiplier for piece values that this gives pieces
 	
-	public MoveTemplate() {
-		
+	/**
+	 * Creates a new movetemplate
+	 * @param vector the vector of the move
+	 * @param infinite whether the move can be repeated indefinitely
+	 * @param swappable whether the components of the vector can be swapped
+	 * @param rotateable whether the vector can be rotated
+	 */
+	public MoveTemplate(int[] vector, boolean infinite, boolean swappable, boolean rotateable) {
+		m_moveVector = vector;
+		m_isInfinite = infinite;
+		m_swappable = swappable;
+		m_rotateable = rotateable;
 	}
 	
 	/**
@@ -50,10 +62,31 @@ public abstract class MoveTemplate {
 		
 		for (int i = 0; i < (m_swappable ? 2 : 1); i++) { //if swappable, iterate through swaps
 			
-			Move move = new Move(this, hor, vert, templateVector);
-			
-			if (move.isValid())
-				moves.add(move); //adds move only if it is valid
+			for (int j = 0; j < (m_rotateable ? 4 : 1); j++) { //iterates through rotations
+				
+				int k = 1; //counter for infinite
+				
+				do {
+					
+					Move move = new Move(this, hor, vert, new int[] {k*templateVector[0], k*templateVector[1]});
+					
+					if (move.isValid())
+						moves.add(move); //adds move only if it is valid
+					else if (Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) != null) { //if there is a pice in the way
+						moves.add(move); 
+						break;
+					} else	//if move is invalid, break
+						break;
+					
+					k++;
+					
+				} while (m_isInfinite); //iterates through infinite moves
+				
+				if (m_rotateable) { //rotate
+					templateVector = new int[] {templateVector[1], templateVector[0]};
+				}
+				
+			}
 			
 			if (m_swappable) { //swap
 				templateVector = new int[] {templateVector[1], templateVector[0]};

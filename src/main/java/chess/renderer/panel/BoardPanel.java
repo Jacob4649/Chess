@@ -1,5 +1,6 @@
 package chess.renderer.panel;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
@@ -8,27 +9,28 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import chess.Chess;
 import chess.engine.EngineConstants;
-import chess.engine.board.Board;
+import chess.engine.moves.Move;
+import chess.engine.pieces.Piece;
 import chess.renderer.RenderConstants;
 
 public class BoardPanel extends JPanel {
 
-	protected Board m_board;
 	protected int[] m_mouseClickPos = new int[] {0, 0};
+	protected Piece m_selectedPiece;
 	
 	/**
 	 * Creates a new render panel that displays the board
 	 * @param board the board to display
 	 */
-	public BoardPanel(Board board) {
-		m_board = board;
+	public BoardPanel() {
 		setBorder(BorderFactory.createLineBorder(RenderConstants.BOARD_BORDER_COLOR));
 		setBackground(RenderConstants.BOARD_LIGHT_COLOR);
 		
 		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				
+			public void mousePressed(MouseEvent e) {	
+				m_selectedPiece = Chess.getBoard().getPieceAt(pixelToPos(e.getX(), e.getY())[0], pixelToPos(e.getX(), e.getY())[1]);
 			}
 		}); 
 	}
@@ -40,6 +42,7 @@ public class BoardPanel extends JPanel {
 		//paint tiles
 		for (int hor = 0; hor < EngineConstants.BOARD_SIZE; hor++) { //renders from left to right 
 			for (int vert = (hor % 2 == 0 ? 0 : 1); vert < EngineConstants.BOARD_SIZE; vert += 2) {
+				g.setColor(Color.BLACK);
 				g.fillRect(horizontalPosToInt(hor), verticalPosToInt(vert), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
 			}
 		}
@@ -48,11 +51,18 @@ public class BoardPanel extends JPanel {
 		for (int hor = 0; hor < EngineConstants.BOARD_SIZE; hor ++) {
 			for (int vert = 0; vert < EngineConstants.BOARD_SIZE; vert++) {
 				try {
-					g.drawImage(m_board.getPieceAt(hor, vert).getImage(), horizontalPosToInt(hor), verticalPosToInt(vert), null); //draws piece
+					g.drawImage(Chess.getBoard().getPieceAt(hor, vert).getImage(), horizontalPosToInt(hor), verticalPosToInt(vert), null); //draws piece
 				} catch (Exception e) {
 					//no piuece is at that position, or the resource file cannot be found
 				}
 				
+			}
+		}
+		
+		if (m_selectedPiece != null) { //if a piece is selected
+			for (Move move : m_selectedPiece.getMoves()) {
+				g.setColor(Color.RED);
+				g.fillRect(horizontalPosToInt(move.getEndPosition()[0]), verticalPosToInt(move.getEndPosition()[1]), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
 			}
 		}
 		

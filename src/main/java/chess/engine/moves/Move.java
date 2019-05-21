@@ -31,4 +31,12 @@ public class Move {
 		return (m_endPosition[0] >= 0 && m_endPosition[0] <= 7 && m_endPosition[1] >= 0 && m_endPosition[1] <= 7); //checks if within board boundaries
 	}
 	
+	/**
+	 * Gets the end position of the move
+	 * @return an array containing the end position of the move
+	 */
+	public int[] getEndPosition() {
+		return m_endPosition;
+	}
+	
 }

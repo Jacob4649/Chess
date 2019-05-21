@@ -8,11 +8,13 @@ import chess.renderer.panel.BoardPanel;
 
 public class Chess {
 	
+	protected static Board m_board = new Board();
+	
 	Chess() {
 
 		JFrame frame = new JFrame("Chess");
 		
-		BoardPanel board = new BoardPanel(new Board());
+		BoardPanel board = new BoardPanel();
 		
 		frame.getContentPane().add(board);
 		frame.pack();
@@ -24,6 +26,14 @@ public class Chess {
         frame.setResizable(false);
 		
         frame.setVisible(true);
+	}
+	
+	/**
+	 * gets the board
+	 * @return m_board
+	 */
+	public static Board getBoard() {
+		return m_board;
 	}
 	
 	public static void main(String[] args) {
