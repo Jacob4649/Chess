@@ -10,7 +10,7 @@ import chess.engine.moves.MoveTemplate;
 public class RookMove extends MoveTemplate {
 
 	public RookMove() {
-		super(new int[] {1, 0}, true, true, true, true);
+		super(new int[] {1, 0}, true, false, true, true);
 	}
 	
 }
