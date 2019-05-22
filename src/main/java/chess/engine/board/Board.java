@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.pieces.Knight;
 import chess.engine.pieces.Pawn;
 import chess.engine.pieces.Piece;
+import chess.engine.pieces.Rook;
 
 /**
  * Class representing a chess board
@@ -23,10 +25,24 @@ public class Board {
 	 * Creates a new board with pieces in starting positions
 	 */
 	public Board() {
+		//TODO : fix starting layouts
+		
 		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
 			m_piecePositions[i][1] = new Pawn(true);
 			m_piecePositions[i][6] = new Pawn(false);
 		}
+		
+		m_piecePositions[1][0] = new Knight(true); //white knights
+		m_piecePositions[6][0] = new Knight(true);
+		
+		m_piecePositions[1][7] = new Knight(false); //black knights
+		m_piecePositions[6][7] = new Knight(false);
+		
+		m_piecePositions[0][0] = new Rook(true); //white rooks
+		m_piecePositions[7][0] = new Rook(true);
+		
+		m_piecePositions[0][7] = new Rook(false); //black rooks
+		m_piecePositions[7][7] = new Rook(false);
 		
 		updatePositions();
 	}

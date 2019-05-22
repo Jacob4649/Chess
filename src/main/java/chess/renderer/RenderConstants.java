@@ -38,6 +38,10 @@ public class RenderConstants {
 	//image locations
 	public static final String WHITE_PAWN_IMAGE = "/resources/whitePawn.png";
 	public static final String BLACK_PAWN_IMAGE = "/resources/blackPawn.png";
+	public static final String WHITE_KNIGHT_IMAGE = "/resources/whiteKnight.png";
+	public static final String BLACK_KNIGHT_IMAGE = "/resources/blackKnight.png";
+	public static final String WHITE_ROOK_IMAGE = "/resources/whiteRook.png";
+	public static final String BLACK_ROOK_IMAGE = "/resources/blackRook.png";
 	
 	public RenderConstants() {
 		
