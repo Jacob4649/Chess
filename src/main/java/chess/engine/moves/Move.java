@@ -39,4 +39,19 @@ public class Move {
 		return m_endPosition;
 	}
 	
+	/**
+	 * Called after this move executes
+	 */
+	public void onMove() {
+		m_moveTemplate.onMove();
+	}
+	
+	/**
+	 * Gets the vector of the move
+	 * @return an array containing the move Vector
+	 */
+	public int[] getVector() {
+		return m_vector;
+	}
+	
 }

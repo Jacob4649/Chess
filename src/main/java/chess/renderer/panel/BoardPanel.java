@@ -1,8 +1,10 @@
 package chess.renderer.panel;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -30,7 +32,23 @@ public class BoardPanel extends JPanel {
 		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {	
-				m_selectedPiece = Chess.getBoard().getPieceAt(pixelToPos(e.getX(), e.getY())[0], pixelToPos(e.getX(), e.getY())[1]);
+				int[] pos = pixelToPos(e.getX(), e.getY());
+				
+				Move move = null;
+				
+				if (m_selectedPiece != null) {
+					move = m_selectedPiece.getMoveThatEndsAt(pos[0], pos[1]);
+				} 
+				
+				if (move != null) {
+					m_selectedPiece.move(move);
+					m_selectedPiece = null;
+				} else {
+					m_selectedPiece = Chess.getBoard().getPieceAt(pos[0], pos[1]);
+					if (m_selectedPiece != null && m_selectedPiece.getIsWhite() != Chess.getBoard().getPlayerIsWhite())
+						m_selectedPiece = null;
+				}
+				
 			}
 		}); 
 	}
@@ -39,19 +57,23 @@ public class BoardPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		Graphics2D g2D = (Graphics2D) g.create();
+		
 		//paint tiles
 		for (int hor = 0; hor < EngineConstants.BOARD_SIZE; hor++) { //renders from left to right 
 			for (int vert = (hor % 2 == 0 ? 0 : 1); vert < EngineConstants.BOARD_SIZE; vert += 2) {
-				g.setColor(Color.BLACK);
-				g.fillRect(horizontalPosToInt(hor), verticalPosToInt(vert), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+				g2D.setColor(Color.BLACK);
+				g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+				g2D.fillRect(horizontalPosToInt(hor), verticalPosToInt(vert), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
 			}
 		}
-		
+
 		//paint pieces
 		for (int hor = 0; hor < EngineConstants.BOARD_SIZE; hor ++) {
 			for (int vert = 0; vert < EngineConstants.BOARD_SIZE; vert++) {
 				try {
-					g.drawImage(Chess.getBoard().getPieceAt(hor, vert).getImage(), horizontalPosToInt(hor), verticalPosToInt(vert), null); //draws piece
+					g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+					g2D.drawImage(Chess.getBoard().getPieceAt(hor, vert).getImage(), horizontalPosToInt(hor), verticalPosToInt(vert), null); //draws piece
 				} catch (Exception e) {
 					//no piuece is at that position, or the resource file cannot be found
 				}
@@ -60,9 +82,13 @@ public class BoardPanel extends JPanel {
 		}
 		
 		if (m_selectedPiece != null) { //if a piece is selected
+			g2D.setColor(Color.BLUE);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));		
+			g2D.fillRect(horizontalPosToInt(m_selectedPiece.getPosition()[0]), verticalPosToInt(m_selectedPiece.getPosition()[1]), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
 			for (Move move : m_selectedPiece.getMoves()) {
-				g.setColor(Color.RED);
-				g.fillRect(horizontalPosToInt(move.getEndPosition()[0]), verticalPosToInt(move.getEndPosition()[1]), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+				g2D.setColor(Color.RED);
+				g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+				g2D.fillRect(horizontalPosToInt(move.getEndPosition()[0]), verticalPosToInt(move.getEndPosition()[1]), ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
 			}
 		}
 		
