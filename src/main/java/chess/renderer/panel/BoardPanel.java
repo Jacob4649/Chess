@@ -45,9 +45,10 @@ public class BoardPanel extends JPanel {
 				
 				if (!m_moveLock) { //like a lock, blocks this code from running once the thread below is in progress
 					m_moveLock = true;
+					m_mouseClickPos = new int[] {e.getX(), e.getY()};
 					new Thread(new Runnable() { //allows UI to keep functioning
 						public void run() {
-							int[] pos = pixelToPos(e.getX(), e.getY());
+							int[] pos = pixelToPos(m_mouseClickPos[0], m_mouseClickPos[1]);
 							
 							Move move = null;
 							
