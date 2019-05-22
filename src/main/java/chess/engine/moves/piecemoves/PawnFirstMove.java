@@ -20,7 +20,7 @@ public class PawnFirstMove extends MoveTemplate {
 	 */
 	@Override
 	public boolean getConditions(int hor, int vert) {
-		return Chess.getBoard().getPieceAt(hor, vert).getMoveCount() == 0;
+		return Chess.getBoard().getPieceAt(hor, vert).getMoveCount() == 0 && Chess.getBoard().getPieceAt(hor, vert + (Chess.getBoard().getPieceAt(hor, vert).getIsWhite() ? 1 : -1)) == null;
 	}
 	
 }

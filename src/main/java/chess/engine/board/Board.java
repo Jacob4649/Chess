@@ -107,9 +107,11 @@ public class Board {
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
-				if (!piece.getIsWhite()) {
-					for (Move move : piece.getMoves()) {
-						moves.add(move);
+				if (piece != null) {
+					if (!piece.getIsWhite()) {
+						for (Move move : piece.getMoves()) {
+							moves.add(move);
+						}
 					}
 				}
 			}
@@ -125,14 +127,40 @@ public class Board {
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
-				if (piece.getIsWhite()) {
-					for (Move move : piece.getMoves()) {
-						moves.add(move);
+				if (piece != null) {
+					if (piece.getIsWhite()) {
+						for (Move move : piece.getMoves()) {
+							moves.add(move);
+						}
 					}
 				}
 			}
 		}
 		return moves.toArray(new Move[moves.size()]);
+	}
+	
+	/**
+	 * Gets all possible player moves
+	 * @return an array of potential player moves
+	 */
+	public Move[] getPlayerMoves() {
+		if (m_playerIsWhite) {
+			return getWhiteMoves();
+		} else {
+			return getBlackMoves();
+		}
+	}
+	
+	/**
+	 * Gets all possible computer moves
+	 * @return an array of potential computer moves
+	 */
+	public Move[] getComputerMoves() {
+		if (m_playerIsWhite) {
+			return getBlackMoves();
+		} else {
+			return getWhiteMoves();
+		}
 	}
 	
 }

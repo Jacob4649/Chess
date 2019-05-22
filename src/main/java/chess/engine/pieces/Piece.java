@@ -7,6 +7,7 @@ import java.util.Arrays;
 import chess.Chess;
 import chess.engine.moves.Move;
 import chess.engine.moves.MoveTemplate;
+import chess.renderer.panel.BoardPanel;
 
 /**
  * Class representing a piece
@@ -78,6 +79,8 @@ public abstract class Piece {
 		setPosition(move.getEndPosition()[0], move.getEndPosition()[1]);
 		
 		move.onMove();
+		
+		Chess.getBoardPanel().setLastMove(move);
 		
 		//TODO : consider getting rid of updatepositions, it is somewhat pointless if you can manage without it
 		Chess.getBoard().updatePositions();

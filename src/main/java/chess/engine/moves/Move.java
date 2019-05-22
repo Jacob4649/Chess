@@ -54,4 +54,12 @@ public class Move {
 		return m_vector;
 	}
 	
+	/**
+	 * Gets the start position of the move
+	 * @return an array containing the start position of the move
+	 */
+	public int[] getStartPosition() {
+		return m_startPosition;
+	}
+	
 }
