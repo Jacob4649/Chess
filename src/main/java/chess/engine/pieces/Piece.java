@@ -67,6 +67,13 @@ public abstract class Piece {
 	}
 	
 	/**
+	 * Increments the move count by 1
+	 */
+	public void incMoveCount() {
+		m_moveCount++;
+	}
+	
+	/**
 	 * Executes the desired move
 	 * @param move the move to execute
 	 */

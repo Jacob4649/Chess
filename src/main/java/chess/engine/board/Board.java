@@ -179,4 +179,21 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Gets the positions of pieces on the board
+	 * @return a 2D array containing all pieces on the board
+	 */
+	public Piece[][] getPiecePositions() {
+		return m_piecePositions;
+	}
+	
+	/**
+	 * Spawns a new BoardState of the current board, with a single move applied to it
+	 * @param move the move to apply
+	 * @return a boardstate of this board, with the supplied move applied
+	 */
+	public BoardState spawnBoardState(Move move) {
+		return new BoardState(this, move);
+	}
+	
 }
