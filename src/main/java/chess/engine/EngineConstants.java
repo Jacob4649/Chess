@@ -10,6 +10,9 @@ public class EngineConstants {
 	//board values
 	public static final int BOARD_SIZE = 8;
 	
+	//AI values
+	public static final int AI_SEARCH_DEPTH = 4;
+	
 	//piece values
 	public static final int PAWN_VALUE = 1;
 	public static final int KNIGHT_VALUE = 3;
