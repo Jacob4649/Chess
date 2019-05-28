@@ -13,6 +13,7 @@ public class MoveTreeNode {
 
 	protected int m_level;
 	protected MoveTreeNode m_parent;
+	protected MoveTree m_tree;
 	protected BoardState m_info;
 	protected Move m_move;
 	protected boolean m_whiteTurn; //if this node is a white turn of a black turn
@@ -26,9 +27,10 @@ public class MoveTreeNode {
 	public MoveTreeNode(MoveTreeNode parent, boolean whiteTurn) {
 		m_parent = parent;
 		m_whiteTurn = whiteTurn;
-		if (parent != null)
+		if (parent != null) {
 			m_level = m_parent.getLevel() + 1;
-		else
+			m_tree = parent.getTree();
+		} else
 			m_level = 0;
 	}
 	
@@ -48,11 +50,13 @@ public class MoveTreeNode {
 	/**
 	 * Creates a root node for the move tree with a specific move
 	 * @param info the boardState for the root node
+	 * @param tree the moveTree containing this rootNode
 	 * @param whiteTurn is this move white
 	 */
-	public MoveTreeNode(BoardState info, boolean whiteTurn) {
+	public MoveTreeNode(BoardState info, MoveTree tree, boolean whiteTurn) {
 		this((MoveTreeNode) null, whiteTurn);
 		m_info = info;
+		m_tree = tree;
 		m_move = null;
 	}
 	
@@ -126,26 +130,19 @@ public class MoveTreeNode {
 	}
 	
 	/**
-	 * Gets all moveTreeNodes at a specified depth
-	 * @param depththe depth to get nodes at
-	 * @return an array containing the movetreenodes found
+	 * Gets the moveTree containing this node
+	 * @return m_tree
 	 */
-	public MoveTreeNode[] getNodesAtDepth(int depth) {
-		ArrayList<MoveTreeNode> childrenAtDepth = new ArrayList<MoveTreeNode>();
-		
-		if (m_level == depth)
-			childrenAtDepth.add(this);
-		
-		for (MoveTreeNode child : m_children) {
-			for (MoveTreeNode metaChild : child.getNodesAtDepth(depth)) {
-				if (metaChild.getLevel() == depth) {
-					childrenAtDepth.add(metaChild);
-				}
-			}
-		}
-		
-		return childrenAtDepth.toArray(new MoveTreeNode[childrenAtDepth.size()]);
-		
+	public MoveTree getTree() {
+		return m_tree;	
+	}
+	
+	/**
+	 * Gets the children of this node
+	 * @return an array containing all children of this node
+	 */
+	public MoveTreeNode[] getChildren() {
+		return m_children.toArray(new MoveTreeNode[m_children.size()]);
 	}
 	
 }

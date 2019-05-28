@@ -196,4 +196,12 @@ public class Board {
 		return new BoardState(this, move);
 	}
 	
+	/**
+	 * Spawns a new BoardState of the current board
+	 * @return a boardstate of this board
+	 */
+	public BoardState spawnBoardState() {
+		return new BoardState(this);
+	}
+	
 }

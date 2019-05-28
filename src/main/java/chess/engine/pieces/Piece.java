@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import chess.Chess;
+import chess.engine.board.Board;
 import chess.engine.moves.Move;
 import chess.engine.moves.MoveTemplate;
-import chess.renderer.panel.BoardPanel;
 
 /**
  * Class representing a piece
@@ -122,19 +122,27 @@ public abstract class Piece {
 	 * @return an array containing every possible move for this piece
 	 */
 	public Move[] getMoves() {
+		return getMoves(Chess.getBoard());
+	}
+	
+	/**
+	 * Gets every possible move for this piece
+	 * @param board the board to check moves on
+	 * @return an array containing every possible move for this piece
+	 */
+	public Move[] getMoves(Board board) {
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (MoveTemplate template : m_possibleMoves) {
-			for (Move move : template.getMoves(m_position[0], m_position[1])) {
+			for (Move move : template.getMoves(m_position[0], m_position[1], board)) {
 				moves.add(move);
 			}
 		}
-		return moves.toArray(new Move[moves.size()]);
+		return moves.toArray(new Move[moves.size()]);		
 	}
 	
 	
-	//TODO : fix getPieceName
-	public String getPieceName() {
-		return toString().substring(toString().lastIndexOf('.')+1, toString().lastIndexOf('@'));
+	public String toString() {
+		return getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
 	}
 	
 	/**

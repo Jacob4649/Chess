@@ -1,5 +1,7 @@
 package chess.engine.board;
 
+import java.util.ArrayList;
+
 import chess.Chess;
 import chess.engine.moves.Move;
 import chess.engine.pieces.Piece;
@@ -20,22 +22,26 @@ public class BoardState extends Board {
 	 * @param move the move to apply to the board
 	 */
 	public BoardState(Board board, Move move) {
-		m_piecePositions = board.getPiecePositions();
+		for (int i = 0; i < board.getPiecePositions().length; i++) {
+			for (int j = 0; j < board.getPiecePositions()[i].length; j++) {
+				m_piecePositions[i][j] = board.getPiecePositions()[i][j];
+			}
+		}
 		
 		if (move != null) {
-			if (this.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) != null) { //if a piece is at the end position
-				this.capture(this.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]));
+			if (getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) != null) { //if a piece is at the end position
+				capture(getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]));
 			}
 			
-			this.movePiece(this.getPieceAt(move.getStartPosition()[0], move.getStartPosition()[1]), move.getEndPosition()[0], move.getEndPosition()[1]);
-			this.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]).setPosition(move.getEndPosition()[0], move.getEndPosition()[1]);
+			movePiece(getPieceAt(move.getStartPosition()[0], move.getStartPosition()[1]), move.getEndPosition()[0], move.getEndPosition()[1]);
+			getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]).setPosition(move.getEndPosition()[0], move.getEndPosition()[1]);
 			
-			move.onMove();
+			move.onMoveOnBoard(this);
 			
-			//TODO : consider getting rid of updatepositions, it is somewhat pointless if you can manage without it
-			this.updatePositions();
+			//TODO : consider getting rid of updatePositions, it is somewhat pointless if you can manage without it
+			updatePositions();
 			
-			this.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]).incMoveCount();
+			getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]).incMoveCount();
 		}
 		
 		calculateValues();
@@ -47,6 +53,50 @@ public class BoardState extends Board {
 	 */
 	public BoardState(Board board) {
 		this(board, null);
+	}
+	
+	/**
+	 * Gets all possible black moves
+	 * @return an array of potential black moves
+	 */
+	@Override
+	public Move[] getBlackMoves() {
+		updatePositions();
+		ArrayList<Move> moves = new ArrayList<Move>();
+		for (Piece[] row : m_piecePositions) {
+			for (Piece piece : row) {
+				if (piece != null) {
+					if (!piece.getIsWhite()) {
+						for (Move move : piece.getMoves(this)) {
+							moves.add(move);
+						}
+					}
+				}
+			}
+		}
+		return moves.toArray(new Move[moves.size()]);
+	}
+	
+	/**
+	 * Gets all possible white moves
+	 * @return an array of potential white moves
+	 */
+	@Override
+	public Move[] getWhiteMoves() {
+		updatePositions();
+		ArrayList<Move> moves = new ArrayList<Move>();
+		for (Piece[] row : m_piecePositions) {
+			for (Piece piece : row) {
+				if (piece != null) {
+					if (piece.getIsWhite()) {
+						for (Move move : piece.getMoves(this)) {
+							moves.add(move);
+						}
+					}
+				}
+			}
+		}
+		return moves.toArray(new Move[moves.size()]);
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import chess.Chess;
+import chess.engine.board.Board;
 import chess.engine.moves.Move;
 import chess.engine.moves.MoveTemplate;
 
@@ -25,18 +26,18 @@ public class PawnCapturingMove extends MoveTemplate {
 	 * @return An array containing all possible moves
 	 */
 	@Override
-	public Move[] getMoves(int hor, int vert) {
-		ArrayList<Move> moves = new ArrayList<Move>(Arrays.asList(super.getMoves(hor, vert)));
+	public Move[] getMoves(int hor, int vert, Board board) {
+		ArrayList<Move> moves = new ArrayList<Move>(Arrays.asList(super.getMoves(hor, vert, board)));
 		ArrayList<Move> removeMoves = new ArrayList<Move>();
 		
-		boolean white = Chess.getBoard().getPieceAt(hor, vert).getIsWhite();
+		boolean white = board.getPieceAt(hor, vert).getIsWhite();
 		
 		for (Move move : moves) {
 			if (white) {
-				if (move.getVector()[1] < 0 || Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) == null)
+				if (move.getVector()[1] < 0 || board.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) == null)
 					removeMoves.add(move);
 			} else {
-				if (move.getVector()[1] > 0 || Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) == null)
+				if (move.getVector()[1] > 0 || board.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) == null)
 					removeMoves.add(move);
 			}
 		}
@@ -55,13 +56,13 @@ public class PawnCapturingMove extends MoveTemplate {
 	 * @return true if the move is currently allowed
 	 */
 	@Override
-	public boolean getConditions(int hor, int vert) {
-		boolean white = Chess.getBoard().getPieceAt(hor, vert).getIsWhite();
+	public boolean getConditions(int hor, int vert, Board board) {
+		boolean white = board.getPieceAt(hor, vert).getIsWhite();
 		
 		if (white) {
-			return (Chess.getBoard().getPieceAt(hor+1, vert+1) != null || Chess.getBoard().getPieceAt(hor-1, vert+1) != null );
+			return (board.getPieceAt(hor+1, vert+1) != null || board.getPieceAt(hor-1, vert+1) != null );
 		} else {
-			return (Chess.getBoard().getPieceAt(hor+1, vert-1) != null || Chess.getBoard().getPieceAt(hor-1, vert-1) != null );
+			return (board.getPieceAt(hor+1, vert-1) != null || board.getPieceAt(hor-1, vert-1) != null );
 		}
 	}
 	

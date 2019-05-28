@@ -1,6 +1,6 @@
 package chess.engine.moves.piecemoves;
 
-import chess.Chess;
+import chess.engine.board.Board;
 import chess.engine.moves.MoveTemplate;
 
 /**
@@ -19,8 +19,8 @@ public class PawnFirstMove extends MoveTemplate {
 	 * Ensures that the piece has not yet moved
 	 */
 	@Override
-	public boolean getConditions(int hor, int vert) {
-		return Chess.getBoard().getPieceAt(hor, vert).getMoveCount() == 0 && Chess.getBoard().getPieceAt(hor, vert + (Chess.getBoard().getPieceAt(hor, vert).getIsWhite() ? 1 : -1)) == null;
+	public boolean getConditions(int hor, int vert, Board board) {
+		return board.getPieceAt(hor, vert).getMoveCount() == 0 && board.getPieceAt(hor, vert + (board.getPieceAt(hor, vert).getIsWhite() ? 1 : -1)) == null;
 	}
 	
 }

@@ -3,6 +3,7 @@ package chess.engine.moves;
 import java.util.ArrayList;
 
 import chess.Chess;
+import chess.engine.board.Board;
 import chess.engine.pieces.Piece;
 
 /**
@@ -62,14 +63,15 @@ public abstract class MoveTemplate {
 	 * @param vert the vertical coordinate of the piece to check moves for
 	 * @return true if the move is currently allowed
 	 */
-	public boolean getConditions(int hor, int vert) {
+	public boolean getConditions(int hor, int vert, Board board) {
 		return true;
 	}
 	
 	/**
-	 * Method run immediately after the move
+	 * Calls onMove on a specific board
+	 * @param board the board to call it on
 	 */
-	public void onMove() {
+	public void onMove(Board board) {
 		
 	}
 	
@@ -77,11 +79,12 @@ public abstract class MoveTemplate {
 	 * Gets all possible permutations of this move from a position
 	 * @param hor the x index [0 to (EngineConstants.BoardSize-1)]
 	 * @param vert the y index [0 to (EngineConstants.BoardSize-1)]
+	 * @param board the board to get moves on
 	 * @return An array containing all possible moves
 	 */
-	public Move[] getMoves(int hor, int vert) { //gets all possible permutations of this move from a position
+	public Move[] getMoves(int hor, int vert, Board board) { //gets all possible permutations of this move from a position
 		ArrayList<Move> moves = new ArrayList<Move>();
-		Piece callingPiece = Chess.getBoard().getPieceAt(hor, vert); //the piece calling the moveTemplate
+		Piece callingPiece = board.getPieceAt(hor, vert); //the piece calling the moveTemplate
 		int[] templateVector = m_moveVector;
 		
 		for (int i = 0; i < (m_swappable ? 2 : 1); i++) { //if swappable, iterate through swaps
@@ -94,11 +97,11 @@ public abstract class MoveTemplate {
 					
 					Move move = new Move(this, hor, vert, new int[] {k*templateVector[0], k*templateVector[1]});
 					
-					if (move.isValid() && getConditions(hor, vert)) {
+					if (move.isValid() && getConditions(hor, vert, board)) {
 						
-						Piece piece = Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]);
+						Piece piece = board.getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]);
 						
-						if (piece != null ) { //if there is a peice in the way
+						if (piece != null ) { //if there is a piece in the way
 							if (m_capturing && piece.getIsWhite() != callingPiece.getIsWhite()) //only if move is capturing and piece is opponent
 								moves.add(move);
 							break;

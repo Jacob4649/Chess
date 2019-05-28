@@ -1,7 +1,9 @@
 package chess.engine.opponent;
 
 import chess.Chess;
+import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.moves.MoveTree;
 import chess.renderer.RenderConstants;
 
 /**
@@ -23,6 +25,8 @@ public class Opponent {
 	 */
 	public Move chooseMove() {
 		//TODO : finish move selection
+		
+		new MoveTree(Chess.getBoard().spawnBoardState(), EngineConstants.AI_SEARCH_DEPTH, !Chess.getBoard().getPlayerIsWhite());
 		
 		if (Chess.getBoard().getPlayerIsWhite()) { //opponent is black
 			return Chess.getBoard().getBlackMoves()[(int) (Math.random() * (Chess.getBoard().getBlackMoves().length - 1))];

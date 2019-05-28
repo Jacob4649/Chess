@@ -1,5 +1,8 @@
 package chess.engine.moves;
 
+import chess.Chess;
+import chess.engine.board.Board;
+
 /**
  * Represetns a move
  * @author Jacob
@@ -43,7 +46,14 @@ public class Move {
 	 * Called after this move executes
 	 */
 	public void onMove() {
-		m_moveTemplate.onMove();
+		m_moveTemplate.onMove(Chess.getBoard());
+	}
+
+	/**
+	 * Called after this move executes
+	 */
+	public void onMoveOnBoard(Board board) {
+		m_moveTemplate.onMove(board);
 	}
 	
 	/**
