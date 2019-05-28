@@ -24,7 +24,10 @@ public class BoardState extends Board {
 	public BoardState(Board board, Move move) {
 		for (int i = 0; i < board.getPiecePositions().length; i++) {
 			for (int j = 0; j < board.getPiecePositions()[i].length; j++) {
-				m_piecePositions[i][j] = board.getPiecePositions()[i][j];
+				if (board.getPiecePositions()[i][j] != null)
+					m_piecePositions[i][j] = board.getPiecePositions()[i][j].clonePiece(board.getPiecePositions()[i][j].getClass());
+				else
+					m_piecePositions[i][j] = null;
 			}
 		}
 		
