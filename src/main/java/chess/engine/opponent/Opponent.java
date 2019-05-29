@@ -25,14 +25,25 @@ public class Opponent {
 	 */
 	public Move chooseMove() {
 		//TODO : finish move selection
+		//TODO : try minmaxing, and maxminning
 		
-		new MoveTree(Chess.getBoard().spawnBoardState(), EngineConstants.AI_SEARCH_DEPTH, !Chess.getBoard().getPlayerIsWhite());
+		MoveTree moves = new MoveTree(Chess.getBoard().spawnBoardState(), EngineConstants.AI_SEARCH_DEPTH, Chess.getBoard().getPlayerIsWhite());
 		
-		if (Chess.getBoard().getPlayerIsWhite()) { //opponent is black
-			return Chess.getBoard().getBlackMoves()[(int) (Math.random() * (Chess.getBoard().getBlackMoves().length - 1))];
-		} else { //opponent is white
-			return Chess.getBoard().getWhiteMoves()[(int) (Math.random() * (Chess.getBoard().getWhiteMoves().length - 1))];
+		int selection = (int) (Math.random() * (moves.getNodesAtDepth(1).length - 1));
+		
+		for (int i = 0; i < moves.getNodesAtDepth(1).length; i++) {
+			if (Chess.getBoard().getPlayerIsWhite()) { //opponent is black
+				if (moves.getNodesAtDepth(1)[i].getWhiteBestCase() < moves.getNodesAtDepth(1)[selection].getWhiteBestCase() || (moves.getNodesAtDepth(1)[i].getWhiteBestCase() == moves.getNodesAtDepth(1)[selection].getWhiteBestCase() && moves.getNodesAtDepth(1)[i].getBlackBestCase() < moves.getNodesAtDepth(1)[selection].getBlackBestCase())) //if equal go to white case comparison
+					selection = i;
+			} else { //opponent is white
+				if (moves.getNodesAtDepth(1)[i].getBlackBestCase() > moves.getNodesAtDepth(1)[selection].getBlackBestCase() || (moves.getNodesAtDepth(1)[i].getBlackBestCase() == moves.getNodesAtDepth(1)[selection].getBlackBestCase() && moves.getNodesAtDepth(1)[i].getWhiteBestCase() > moves.getNodesAtDepth(1)[selection].getWhiteBestCase())) //if equal go to black case comparison
+					selection = i;				
+			}
+			
 		}
+		
+		return moves.getNodesAtDepth(1)[selection].getMove();
+
 	}
 	
 	/**

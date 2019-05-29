@@ -14,7 +14,7 @@ import chess.engine.moves.MoveTemplate;
  * @author Jacob
  *
  */
-public abstract class Piece <T extends Piece<T>> {
+public abstract class Piece {
 
 	protected int m_value = 0;
 	protected boolean m_isWhite = false;
@@ -161,37 +161,20 @@ public abstract class Piece <T extends Piece<T>> {
 	 * @param posx the horizontal index of this piece [0, 7]
 	 * @param posy the vertical index of this piece [0, 7]
 	 * @param moveCount the moveCount of this piece
+	 * @retrun the piece that has been modified
 	 */
-	public void construct(int value, boolean isWhite, ArrayList<MoveTemplate> possibleMoves, int posx, int posy, int moveCount) {
+	public Piece construct(int value, boolean isWhite, ArrayList<MoveTemplate> possibleMoves, int posx, int posy, int moveCount) {
 		m_value = value;
 		m_isWhite = isWhite;
 		m_possibleMoves = possibleMoves;
 		m_position = new int[] {posx, posy};
 		m_moveCount = 0;
+		return this;
 	}
 	
 	/**
 	 * Creates an identical clone of this piece
-	 * @return
+	 * @return an identical clone of this piece
 	 */
-	@SuppressWarnings("unchecked")
-	public T clonePiece(Class<T> type) {
-		ArrayList<MoveTemplate> possibleMoves = new ArrayList<MoveTemplate>();
-		for (MoveTemplate move : m_possibleMoves) {
-			possibleMoves.add(move);
-		}
-		
-		T piece;
-		
-		try {
-			piece = type.newInstance();
-		} catch (IllegalAccessException | InstantiationException e) {
-			return null;
-		}
-		
-		piece.construct(getValue(), getIsWhite(), possibleMoves, getPosition()[0], getPosition()[1], getMoveCount());
-		
-		return piece;
-	}
-	
+	public abstract Piece clonePiece();	
 }

@@ -22,11 +22,13 @@ public class Knight extends Piece {
 	public Knight(boolean isWhite) {
 		super(EngineConstants.KNIGHT_VALUE, isWhite, new MoveTemplate[] {new KnightMove()});
 		
-		try {
-			m_whiteImage = ImageIO.read(getClass().getResource(RenderConstants.WHITE_KNIGHT_IMAGE));
-			m_blackImage = ImageIO.read(getClass().getResource(RenderConstants.BLACK_KNIGHT_IMAGE));
-		} catch (Exception e) {
-			//resource not found
+		if (m_blackImage == null || m_whiteImage == null) {
+			try {
+				m_whiteImage = ImageIO.read(getClass().getResource(RenderConstants.WHITE_KNIGHT_IMAGE));
+				m_blackImage = ImageIO.read(getClass().getResource(RenderConstants.BLACK_KNIGHT_IMAGE));
+			} catch (Exception e) {
+				//resource not found
+			}
 		}
 	}
 	
@@ -37,5 +39,14 @@ public class Knight extends Piece {
 	@Override
 	public Image getImage() {
 		return (m_isWhite ? m_whiteImage : m_blackImage);
+	}
+	
+	/**
+	 * Clones this piece
+	 * @return a clone of this piece
+	 */
+	@Override
+	public Knight clonePiece() {
+		return (Knight) new Knight(getIsWhite()).construct(getValue(), getIsWhite(), m_possibleMoves, getPosition()[0], getPosition()[1], getMoveCount());
 	}
 }

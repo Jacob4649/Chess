@@ -24,11 +24,13 @@ public class Pawn extends Piece {
 	public Pawn(boolean isWhite) {
 		super(EngineConstants.PAWN_VALUE, isWhite, new MoveTemplate[] {new PawnMove(), new PawnFirstMove(), new PawnCapturingMove()});
 		
-		try {
-			m_whiteImage = ImageIO.read(getClass().getResource(RenderConstants.WHITE_PAWN_IMAGE));
-			m_blackImage = ImageIO.read(getClass().getResource(RenderConstants.BLACK_PAWN_IMAGE));
-		} catch (Exception e) {
-			//resource not found
+		if (m_blackImage == null || m_whiteImage == null) {
+			try {
+				m_whiteImage = ImageIO.read(getClass().getResource(RenderConstants.WHITE_PAWN_IMAGE));
+				m_blackImage = ImageIO.read(getClass().getResource(RenderConstants.BLACK_PAWN_IMAGE));
+			} catch (Exception e) {
+				//resource not found
+			}
 		}
 	}
 	
@@ -39,6 +41,15 @@ public class Pawn extends Piece {
 	@Override
 	public Image getImage() {
 		return (m_isWhite ? m_whiteImage : m_blackImage);
+	}
+
+	/**
+	 * Clones this piece
+	 * @return a clone of this piece
+	 */
+	@Override
+	public Pawn clonePiece() {
+		return (Pawn) new Pawn(getIsWhite()).construct(getValue(), getIsWhite(), m_possibleMoves, getPosition()[0], getPosition()[1], getMoveCount());
 	}
 	
 }

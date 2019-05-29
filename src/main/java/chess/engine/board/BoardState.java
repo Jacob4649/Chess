@@ -3,6 +3,7 @@ package chess.engine.board;
 import java.util.ArrayList;
 
 import chess.Chess;
+import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
 import chess.engine.pieces.Piece;
 
@@ -22,10 +23,10 @@ public class BoardState extends Board {
 	 * @param move the move to apply to the board
 	 */
 	public BoardState(Board board, Move move) {
-		for (int i = 0; i < board.getPiecePositions().length; i++) {
-			for (int j = 0; j < board.getPiecePositions()[i].length; j++) {
-				if (board.getPiecePositions()[i][j] != null)
-					m_piecePositions[i][j] = board.getPiecePositions()[i][j].clonePiece(board.getPiecePositions()[i][j].getClass());
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) {
+			for (int j = 0; j < EngineConstants.BOARD_SIZE; j++) {
+				if (board.getPieceAt(i, j) != null)
+					m_piecePositions[i][j] = board.getPieceAt(i, j).clonePiece();
 				else
 					m_piecePositions[i][j] = null;
 			}
@@ -56,6 +57,20 @@ public class BoardState extends Board {
 	 */
 	public BoardState(Board board) {
 		this(board, null);
+	}
+	
+	/**
+	 * Prints the contents of this boardstate
+	 * @param board the board to print
+	 */
+	void printBoard(Board board) {
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) {
+			System.out.print("\t");
+			for (int j = 0; j < EngineConstants.BOARD_SIZE; j++) {
+				System.out.print(("" + board.getPieceAt(j, i)).charAt(0));
+			}
+			System.out.println();
+		}
 	}
 	
 	/**

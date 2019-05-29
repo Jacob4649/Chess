@@ -2,6 +2,7 @@ package chess.engine.board;
 
 import java.util.ArrayList;
 
+import chess.Chess;
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
 import chess.engine.pieces.Knight;
@@ -19,7 +20,7 @@ public class Board {
 	protected Piece[][] m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
 	protected ArrayList<Piece> m_whiteCaptured = new ArrayList<Piece>();
 	protected ArrayList<Piece> m_blackCaptured = new ArrayList<Piece>();
-	protected boolean m_playerIsWhite = true; 
+	protected boolean m_playerIsWhite = false; 
 	
 	/**
 	 * Creates a new board with pieces in starting positions

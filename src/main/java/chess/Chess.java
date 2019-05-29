@@ -3,6 +3,7 @@ package chess;
 import javax.swing.JFrame;
 
 import chess.engine.board.Board;
+import chess.engine.board.BoardState;
 import chess.engine.opponent.Opponent;
 import chess.renderer.RenderConstants;
 import chess.renderer.panel.BoardPanel;

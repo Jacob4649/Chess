@@ -127,7 +127,6 @@ public abstract class MoveTemplate {
 				templateVector = new int[] {templateVector[1], templateVector[0]};
 			}
 		}
-		
 		return moves.toArray(new Move[moves.size()]);
 	}
 	
