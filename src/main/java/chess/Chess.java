@@ -8,6 +8,23 @@ import chess.engine.opponent.Opponent;
 import chess.renderer.RenderConstants;
 import chess.renderer.panel.BoardPanel;
 
+/**
+ * Jacob Klimczak
+ * ICS3UO
+ * Course Summative - Chess Game
+ * 
+ * Info On AI Design And Minimaxing Was Taken From:
+ * https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/
+ * https://en.wikipedia.org/wiki/Minimax
+ * 
+ * No Code From Either Of These Sources Was Used
+ */
+
+/**
+ * Represents a game of chess
+ * @author Jacob
+ *
+ */
 public class Chess {
 	
 	protected static Board m_board = new Board();
@@ -28,6 +45,17 @@ public class Chess {
         frame.setResizable(false);
 		
         frame.setVisible(true);
+        
+		if (!m_board.getPlayerIsWhite()) { //have opponent make first move if player is white
+			new Thread(new Runnable() { //allows UI to keep running
+				public void run() {
+					m_boardPanel.setMoveLock(true);
+					m_opponent.takeTurn();
+					m_boardPanel.setMoveLock(false);
+				}
+			}).start();
+		}
+			
 	}
 	
 	/**

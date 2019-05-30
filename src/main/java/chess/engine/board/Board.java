@@ -20,7 +20,7 @@ public class Board {
 	protected Piece[][] m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
 	protected ArrayList<Piece> m_whiteCaptured = new ArrayList<Piece>();
 	protected ArrayList<Piece> m_blackCaptured = new ArrayList<Piece>();
-	protected boolean m_playerIsWhite = false; 
+	protected boolean m_playerIsWhite = true; 
 	
 	/**
 	 * Creates a new board with pieces in starting positions

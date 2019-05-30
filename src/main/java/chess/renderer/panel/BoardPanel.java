@@ -183,4 +183,12 @@ public class BoardPanel extends JPanel {
 		m_lastMove = move;
 	}
 	
+	/**
+	 * assigns moveLock
+	 * @param moveLock the value to assign
+	 */
+	public void setMoveLock(boolean moveLock) {
+		m_moveLock = moveLock;
+	}
+	
 }

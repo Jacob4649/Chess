@@ -15,8 +15,8 @@ public class EngineConstants {
 	
 	//piece values
 	public static final int PAWN_VALUE = 1;
-	public static final int KNIGHT_VALUE = 3;
-	public static final int ROOK_VALUE = 2;
+	public static final int KNIGHT_VALUE = 10;
+	public static final int ROOK_VALUE = 15;
 	
 	public EngineConstants() {
 		

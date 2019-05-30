@@ -11,7 +11,7 @@ import chess.engine.board.BoardState;
  */
 public class MoveTreeNode {
 
-	protected int m_level, m_blackBestCase, m_whiteBestCase = 0;
+	protected int m_level, m_value = 0;
 	protected MoveTreeNode m_parent;
 	protected MoveTree m_tree;
 	protected BoardState m_info;
@@ -146,35 +146,19 @@ public class MoveTreeNode {
 	}
 	
 	/**
-	 * Sets the blackBestCase
+	 * Sets the value
 	 * @param value the value to assign
 	 */
-	public void setBlackBestCase(int value) {
-		m_blackBestCase = value;
+	public void setValue(int value) {
+		m_value = value;
 	}
 	
 	/**
-	 * Gets the black best case
-	 * @return the black best case (lower is better)
+	 * Gets the value case
+	 * @return the value 
 	 */
-	public int getBlackBestCase() {
-		return m_blackBestCase;
-	}
-	
-	/**
-	 * Sets the whiteBestCase
-	 * @param value the value to assign
-	 */
-	public void setWhiteBestCase(int value) {
-		m_whiteBestCase = value;
-	}
-	
-	/**
-	 * Gets the white best case
-	 * @return the white best case (higher is better)
-	 */
-	public int getWhiteBestCase() {
-		return m_whiteBestCase;
+	public int getValue() {
+		return m_value;
 	}
 	
 	/**

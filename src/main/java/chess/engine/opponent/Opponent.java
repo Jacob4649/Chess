@@ -33,10 +33,10 @@ public class Opponent {
 		
 		for (int i = 0; i < moves.getNodesAtDepth(1).length; i++) {
 			if (Chess.getBoard().getPlayerIsWhite()) { //opponent is black
-				if (moves.getNodesAtDepth(1)[i].getWhiteBestCase() < moves.getNodesAtDepth(1)[selection].getWhiteBestCase() || (moves.getNodesAtDepth(1)[i].getWhiteBestCase() == moves.getNodesAtDepth(1)[selection].getWhiteBestCase() && moves.getNodesAtDepth(1)[i].getBlackBestCase() < moves.getNodesAtDepth(1)[selection].getBlackBestCase())) //if equal go to white case comparison
+				if (moves.getNodesAtDepth(1)[i].getValue() < moves.getNodesAtDepth(1)[selection].getValue())
 					selection = i;
 			} else { //opponent is white
-				if (moves.getNodesAtDepth(1)[i].getBlackBestCase() > moves.getNodesAtDepth(1)[selection].getBlackBestCase() || (moves.getNodesAtDepth(1)[i].getBlackBestCase() == moves.getNodesAtDepth(1)[selection].getBlackBestCase() && moves.getNodesAtDepth(1)[i].getWhiteBestCase() > moves.getNodesAtDepth(1)[selection].getWhiteBestCase())) //if equal go to black case comparison
+				if (moves.getNodesAtDepth(1)[i].getValue() > moves.getNodesAtDepth(1)[selection].getValue())
 					selection = i;				
 			}
 			

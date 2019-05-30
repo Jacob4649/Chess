@@ -3,6 +3,7 @@ package chess.engine.moves;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import chess.Chess;
 import chess.engine.board.BoardState;
 
 /**
@@ -26,7 +27,7 @@ public class MoveTree {
 		m_depth = depth;
 		
 		populateMoveTree();
-		calculateCases();
+		calculateCases(m_depth);
 	}
 	
 	/**
@@ -80,17 +81,32 @@ public class MoveTree {
 	
 	/**
 	 * Calculates cases
+	 * @param depth the depth to search for cases down to
 	 */
-	public void calculateCases() {
-		for (int i = m_depth; i >= 0; i--) {
+	public void calculateCases(int depth) {
+		if (depth > m_depth)
+			depth = m_depth;
+		for (int i = depth; i >= 0; i--) {
 			for (MoveTreeNode node : getNodesAtDepth(i)) {
 				if (i == m_depth) { //end Nodes
-					node.setBlackBestCase(node.getBoardState().getValueDifference());
-					node.setWhiteBestCase(node.getBoardState().getValueDifference());
+					node.setValue(node.getBoardState().getValueDifference());
 				} else {
-					for (MoveTreeNode child : node.getChildren()) {
-						node.setBlackBestCase(Math.min(node.getBlackBestCase(), child.getBlackBestCase()));
-						node.setWhiteBestCase(Math.max(node.getWhiteBestCase(), child.getWhiteBestCase()));
+					for (MoveTreeNode child : node.getChildren()) { //assign worst possible value at each node
+						if (node.getIsWhiteTurn() == Chess.getBoard().getPlayerIsWhite()) {
+							//player move
+							if (Chess.getBoard().getPlayerIsWhite()) { //white player (max)
+								node.setValue(Math.max(node.getValue(), child.getValue()));
+							} else { //black player (min)
+								node.setValue(Math.min(node.getValue(), child.getValue()));
+							}	
+						} else {	
+							//opponent move 
+							if (Chess.getBoard().getPlayerIsWhite()) { //white opponent (max)
+								node.setValue(Math.max(node.getValue(), child.getValue()));
+							} else { //black opponent (min)
+								node.setValue(Math.min(node.getValue(), child.getValue()));
+							}	
+						}
 					}
 				}
 			}
