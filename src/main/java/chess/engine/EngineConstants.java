@@ -17,6 +17,7 @@ public class EngineConstants {
 	public static final int PAWN_VALUE = 1;
 	public static final int KNIGHT_VALUE = 10;
 	public static final int ROOK_VALUE = 15;
+	public static final int KING_VALUE = 900;
 	
 	public EngineConstants() {
 		

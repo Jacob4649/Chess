@@ -35,6 +35,16 @@ public class Move {
 	}
 	
 	/**
+	 * Indicates if a move results in check for a certain player
+	 * @param isWhite the player to check for
+	 * @param moves the moves to check through
+	 * @return true if the move results in check for the designated player
+	 */
+	public boolean resultsInCheckFor(boolean isWhite, Move[] moves) {
+		return Chess.getBoard().spawnBoardState(this).getInCheck(isWhite, moves);
+	}
+	
+	/**
 	 * Gets the end position of the move
 	 * @return an array containing the end position of the move
 	 */

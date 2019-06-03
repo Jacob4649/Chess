@@ -92,7 +92,8 @@ public class BoardState extends Board {
 				}
 			}
 		}
-		return moves.toArray(new Move[moves.size()]);
+		m_blackMoves = moves.toArray(new Move[moves.size()]);
+		return m_blackMoves;
 	}
 	
 	/**
@@ -114,7 +115,8 @@ public class BoardState extends Board {
 				}
 			}
 		}
-		return moves.toArray(new Move[moves.size()]);
+		m_whiteMoves = moves.toArray(new Move[moves.size()]);
+		return m_whiteMoves;
 	}
 	
 	/**

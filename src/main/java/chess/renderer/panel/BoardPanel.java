@@ -59,7 +59,6 @@ public class BoardPanel extends JPanel {
 							if (move != null) {
 								m_selectedPiece.move(move);
 								m_selectedPiece = null;
-								
 								//opponent turn
 								Chess.getOpponent().takeTurn();
 							} else {

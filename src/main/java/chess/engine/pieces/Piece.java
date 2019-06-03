@@ -92,6 +92,8 @@ public abstract class Piece {
 		//TODO : consider getting rid of updatepositions, it is somewhat pointless if you can manage without it
 		Chess.getBoard().updatePositions();
 		
+		Chess.getBoard().resetMoveStorage();
+		
 		m_moveCount++;
 	}
 	

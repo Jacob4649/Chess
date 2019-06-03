@@ -2,9 +2,9 @@ package chess.engine.board;
 
 import java.util.ArrayList;
 
-import chess.Chess;
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.pieces.King;
 import chess.engine.pieces.Knight;
 import chess.engine.pieces.Pawn;
 import chess.engine.pieces.Piece;
@@ -18,6 +18,8 @@ import chess.engine.pieces.Rook;
 public class Board {
 
 	protected Piece[][] m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+	protected King m_blackKing, m_whiteKing;
+	protected Move[] m_whiteMoves, m_blackMoves;
 	protected ArrayList<Piece> m_whiteCaptured = new ArrayList<Piece>();
 	protected ArrayList<Piece> m_blackCaptured = new ArrayList<Piece>();
 	protected boolean m_playerIsWhite = true; 
@@ -44,6 +46,12 @@ public class Board {
 		
 		m_piecePositions[0][7] = new Rook(false); //black rooks
 		m_piecePositions[7][7] = new Rook(false);
+		
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[3][0] = m_whiteKing; //white king
 		
 		updatePositions();
 	}
@@ -121,6 +129,8 @@ public class Board {
 	 * @return an array of potential black moves
 	 */
 	public Move[] getBlackMoves() {
+		if (m_blackMoves != null)
+			return m_blackMoves;
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
@@ -133,7 +143,8 @@ public class Board {
 				}
 			}
 		}
-		return moves.toArray(new Move[moves.size()]);
+		m_blackMoves = moves.toArray(new Move[moves.size()]);
+		return m_blackMoves;
 	}
 	
 	/**
@@ -141,6 +152,8 @@ public class Board {
 	 * @return an array of potential white moves
 	 */
 	public Move[] getWhiteMoves() {
+		if (m_whiteMoves != null)
+			return m_whiteMoves;
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
@@ -153,7 +166,8 @@ public class Board {
 				}
 			}
 		}
-		return moves.toArray(new Move[moves.size()]);
+		m_whiteMoves = moves.toArray(new Move[moves.size()]);
+		return m_whiteMoves;
 	}
 	
 	/**
@@ -203,6 +217,38 @@ public class Board {
 	 */
 	public BoardState spawnBoardState() {
 		return new BoardState(this);
+	}
+	
+	/**
+	 * Gets either the white or the black king
+	 * @param isWhite whether to get the white king or the black king
+	 * @return the king of the specified color
+	 */
+	public King getKing(boolean isWhite) {
+		return isWhite ? m_whiteKing : m_blackKing;
+	}
+	
+	/**
+	 * Indicates if the designated king is in check
+	 * @param isWhite if true check white king, otherwise check black king
+	 * @param moves the array of moves to check through
+	 * @return true if the designated king is in check
+	 */
+	public boolean getInCheck(boolean isWhite, Move[] moves) {
+		for (Move move : (isWhite ? getBlackMoves() : getWhiteMoves())) {
+			if (move.getEndPosition()[0] ==  (isWhite ? m_whiteKing : m_blackKing).getPosition()[0] && move.getEndPosition()[1] ==  (isWhite ? m_whiteKing : m_blackKing).getPosition()[1]) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Resets the move storage, must be done after every turn
+	 */
+	public void resetMoveStorage() {
+		m_blackMoves = null;
+		m_whiteMoves = null;
 	}
 	
 }
