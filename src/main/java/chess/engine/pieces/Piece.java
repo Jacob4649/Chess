@@ -175,6 +175,29 @@ public abstract class Piece {
 	}
 	
 	/**
+	 * Gets if the move could put this piece's king in check
+	 * @param board the board to get the king from
+	 * @return true if this move could put this team's king in check
+	 */
+	public boolean getMoveCauseCheckOnBoard(Board board, boolean isWhite) {
+		King king = board.getKing(isWhite);
+		int[] vector = new int[] {m_position[0] - king.getPosition()[0], m_position[1] - king.getPosition()[1]};
+		double slope = 0;
+		try {
+			slope = (double) vector[1] / (double) vector[0];
+		} catch (ArithmeticException e) {
+			return true;
+		}
+		
+		if (Math.abs(slope) == 1.0) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	/**
 	 * Creates an identical clone of this piece
 	 * @return an identical clone of this piece
 	 */
