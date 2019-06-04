@@ -62,9 +62,8 @@ public class BoardPanel extends JPanel {
 								//opponent turn
 								Chess.getOpponent().takeTurn();
 							} else {
-								m_selectedPiece = Chess.getBoard().getPieceAt(pos[0], pos[1]);
-								if (m_selectedPiece != null && m_selectedPiece.getIsWhite() != Chess.getBoard().getPlayerIsWhite())
-									m_selectedPiece = null;
+								if (m_selectedPiece != null && m_selectedPiece.getIsWhite() == Chess.getBoard().getPlayerIsWhite())
+									m_selectedPiece = Chess.getBoard().getPieceAt(pos[0], pos[1]);
 							}
 							
 							m_moveLock = false;
