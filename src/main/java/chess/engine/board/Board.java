@@ -53,9 +53,6 @@ public class Board {
 		m_piecePositions[4][7] = m_blackKing; //black king
 		m_piecePositions[3][0] = m_whiteKing; //white king
 		
-		m_piecePositions[3][1] = null;
-		m_piecePositions[3][2] = new Rook(false);
-		
 		updatePositions();
 	}
 	

@@ -14,7 +14,7 @@ import chess.engine.board.BoardState;
 public class MoveTree {
 
 	protected MoveTreeNode m_rootNode;
-	protected ArrayList<ArrayList<MoveTreeNode>> m_treePyramid; //pyramid data structure for tree
+	protected ArrayList<ArrayList<MoveTreeNode>> m_treePyramid; //pyramid data structure for tree, because the recursive functions are technically slightly more cpu intensive, while this is (significantly) more memory intensive, will be removed if i switch to recursive for AB pruning
 	protected int m_depth;
 	
 	/**
