@@ -53,6 +53,9 @@ public class Board {
 		m_piecePositions[4][7] = m_blackKing; //black king
 		m_piecePositions[3][0] = m_whiteKing; //white king
 		
+		m_piecePositions[3][1] = null;
+		m_piecePositions[3][2] = new Rook(false);
+		
 		updatePositions();
 	}
 	
@@ -122,6 +125,27 @@ public class Board {
 	 */
 	public boolean getPlayerIsWhite() {
 		return m_playerIsWhite;
+	}
+	
+	/**
+	 * Gets all possible raw moves
+	 * @param isWhite the player to get raw moves for, tru if white
+	 * @return an array of raw moves
+	 */
+	public Move[] getRawMoves(boolean isWhite) {
+		ArrayList<Move> moves = new ArrayList<Move>();
+		for (Piece[] row : m_piecePositions) {
+			for (Piece piece : row) {
+				if (piece != null) {
+					if (piece.getIsWhite() == isWhite) {
+						for (Move move : piece.getRawMoves(this)) {
+							moves.add(move);
+						}
+					}
+				}
+			}
+		}
+		return moves.toArray(new Move[moves.size()]);
 	}
 	
 	/**
@@ -231,11 +255,11 @@ public class Board {
 	/**
 	 * Indicates if the designated king is in check
 	 * @param isWhite if true check white king, otherwise check black king
-	 * @param moves the array of moves to check through
 	 * @return true if the designated king is in check
 	 */
-	public boolean getInCheck(boolean isWhite, Move[] moves) {
-		for (Move move : (isWhite ? getBlackMoves() : getWhiteMoves())) {
+	public boolean getInCheck(boolean isWhite) {
+		updatePositions();
+		for (Move move : getRawMoves(!isWhite)) {
 			if (move.getEndPosition()[0] ==  (isWhite ? m_whiteKing : m_blackKing).getPosition()[0] && move.getEndPosition()[1] ==  (isWhite ? m_whiteKing : m_blackKing).getPosition()[1]) {
 				return true;
 			}

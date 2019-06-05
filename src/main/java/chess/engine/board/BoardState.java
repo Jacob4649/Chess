@@ -2,9 +2,9 @@ package chess.engine.board;
 
 import java.util.ArrayList;
 
-import chess.Chess;
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.pieces.King;
 import chess.engine.pieces.Piece;
 
 /**
@@ -25,9 +25,14 @@ public class BoardState extends Board {
 	public BoardState(Board board, Move move) {
 		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) {
 			for (int j = 0; j < EngineConstants.BOARD_SIZE; j++) {
-				if (board.getPieceAt(i, j) != null)
+				if (board.getPieceAt(i, j) != null) {
 					m_piecePositions[i][j] = board.getPieceAt(i, j).clonePiece();
-				else
+					if (m_piecePositions[i][j].toString().equals("White King")) {
+						m_whiteKing = (King) m_piecePositions[i][j];
+					} else if (m_piecePositions[i][j].toString().equals("Black King")) {
+						m_blackKing = (King) m_piecePositions[i][j];
+					}
+				} else
 					m_piecePositions[i][j] = null;
 			}
 		}
@@ -80,6 +85,8 @@ public class BoardState extends Board {
 	@Override
 	public Move[] getBlackMoves() {
 		updatePositions();
+		if (m_blackMoves != null)
+			return m_blackMoves;
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
@@ -103,6 +110,8 @@ public class BoardState extends Board {
 	@Override
 	public Move[] getWhiteMoves() {
 		updatePositions();
+		if (m_whiteMoves != null)
+			return m_whiteMoves;
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {

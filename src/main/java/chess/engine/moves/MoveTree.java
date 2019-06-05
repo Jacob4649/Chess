@@ -91,20 +91,22 @@ public class MoveTree {
 				if (i == m_depth) { //end Nodes
 					node.setValue(node.getBoardState().getValueDifference());
 				} else {
+					if (node.getChildren().length > 0)
+						node.setValue(node.getChildren()[0].getValue());
 					for (MoveTreeNode child : node.getChildren()) { //assign worst possible value at each node
-						if (node.getIsWhiteTurn() == Chess.getBoard().getPlayerIsWhite()) {
-							//player move
+						if (node.getIsWhiteTurn() != Chess.getBoard().getPlayerIsWhite()) {
+							//player children
 							if (Chess.getBoard().getPlayerIsWhite()) { //white player (max)
 								node.setValue(Math.max(node.getValue(), child.getValue()));
 							} else { //black player (min)
 								node.setValue(Math.min(node.getValue(), child.getValue()));
 							}	
 						} else {	
-							//opponent move 
+							//opponent children
 							if (Chess.getBoard().getPlayerIsWhite()) { //white opponent (max)
-								node.setValue(Math.max(node.getValue(), child.getValue()));
-							} else { //black opponent (min)
 								node.setValue(Math.min(node.getValue(), child.getValue()));
+							} else { //black opponent (min)
+								node.setValue(Math.max(node.getValue(), child.getValue()));
 							}	
 						}
 					}

@@ -8,6 +8,7 @@ import chess.Chess;
 import chess.engine.board.Board;
 import chess.engine.moves.Move;
 import chess.engine.moves.MoveTemplate;
+import chess.engine.moves.MoveTree;
 
 /**
  * Class representing a piece
@@ -128,6 +129,22 @@ public abstract class Piece {
 	}
 	
 	/**
+	 * Gets every possible raw move for this piece
+	 * @param board the board to check moves on
+	 * @return an array containing every possible move for this piece
+	 */
+	public Move[] getRawMoves(Board board) {
+		ArrayList<Move> moves = new ArrayList<Move>();
+		for (MoveTemplate template : m_possibleMoves) {
+			for (Move move : template.getMoves(m_position[0], m_position[1], board)) {
+				moves.add(move);
+			}
+		}
+		
+		return moves.toArray(new Move[moves.size()]);		
+	}
+	
+	/**
 	 * Gets every possible move for this piece
 	 * @param board the board to check moves on
 	 * @return an array containing every possible move for this piece
@@ -139,12 +156,24 @@ public abstract class Piece {
 				moves.add(move);
 			}
 		}
+		
+		if (getMoveCauseCheckOnBoard(board) || board.getInCheck(m_isWhite)) {
+			ArrayList<Move> toRemove = new ArrayList<Move>();
+			for (Move move : moves) { //iterates through all possible moves for this piece
+				if (board.spawnBoardState(move).getInCheck(m_isWhite))
+					toRemove.add(move);
+			}
+			for (Move move : toRemove) {
+				moves.remove(move);
+			}
+		}
+		
 		return moves.toArray(new Move[moves.size()]);		
 	}
 	
 	
 	public String toString() {
-		return getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
+		return (m_isWhite ? "White " : "Black ") + getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
 	}
 	
 	/**
@@ -179,8 +208,8 @@ public abstract class Piece {
 	 * @param board the board to get the king from
 	 * @return true if this move could put this team's king in check
 	 */
-	public boolean getMoveCauseCheckOnBoard(Board board, boolean isWhite) {
-		King king = board.getKing(isWhite);
+	public boolean getMoveCauseCheckOnBoard(Board board) {
+		King king = board.getKing(m_isWhite);
 		int[] vector = new int[] {m_position[0] - king.getPosition()[0], m_position[1] - king.getPosition()[1]};
 		double slope = 0;
 		try {
@@ -189,7 +218,7 @@ public abstract class Piece {
 			return true;
 		}
 		
-		if (Math.abs(slope) == 1.0) {
+		if (Math.abs(slope) == 1.0 || Math.abs(slope) == 0.0 || Double.isNaN(slope) || Double.isInfinite(slope)) {
 			return true;
 		} else {
 			return false;

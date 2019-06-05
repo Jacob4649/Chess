@@ -16,7 +16,7 @@ public class MoveTreeNode {
 	protected MoveTree m_tree;
 	protected BoardState m_info;
 	protected Move m_move;
-	protected boolean m_whiteTurn; //if this node is a white turn of a black turn
+	protected boolean m_whiteTurn; //if this node is a white turn or a black turn (move made on this node)
 	ArrayList<MoveTreeNode> m_children = new ArrayList<MoveTreeNode>();
 	
 	/**
