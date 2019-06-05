@@ -44,6 +44,10 @@ public class RenderConstants {
 	public static final String BLACK_ROOK_IMAGE = "/resources/blackRook.png";
 	public static final String WHITE_KING_IMAGE = "/resources/whiteKing.png";
 	public static final String BLACK_KING_IMAGE = "/resources/blackKing.png";
+	public static final String WHITE_BISHOP_IMAGE = "/resources/whiteBishop.png";
+	public static final String BLACK_BISHOP_IMAGE = "/resources/blackBishop.png";
+	public static final String WHITE_QUEEN_IMAGE = "/resources/whiteQueen.png";
+	public static final String BLACK_QUEEN_IMAGE = "/resources/blackQueen.png";
 	
 	public RenderConstants() {
 		

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.pieces.Bishop;
 import chess.engine.pieces.King;
 import chess.engine.pieces.Knight;
 import chess.engine.pieces.Pawn;
 import chess.engine.pieces.Piece;
+import chess.engine.pieces.Queen;
 import chess.engine.pieces.Rook;
 
 /**
@@ -47,11 +49,20 @@ public class Board {
 		m_piecePositions[0][7] = new Rook(false); //black rooks
 		m_piecePositions[7][7] = new Rook(false);
 		
+		m_piecePositions[2][0] = new Bishop(true); //white bishops
+		m_piecePositions[5][0] = new Bishop(true);
+		
+		m_piecePositions[2][7] = new Bishop(false); //black bishops
+		m_piecePositions[5][7] = new Bishop(false);
+		
 		m_blackKing = new King(false);
 		m_whiteKing = new King(true);
 		
 		m_piecePositions[4][7] = m_blackKing; //black king
 		m_piecePositions[3][0] = m_whiteKing; //white king
+		
+		m_piecePositions[3][7] = new Queen(false); //black queen
+		m_piecePositions[4][0] = new Queen(true); //white queen
 		
 		updatePositions();
 	}
