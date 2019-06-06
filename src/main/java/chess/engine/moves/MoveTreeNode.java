@@ -2,6 +2,7 @@ package chess.engine.moves;
 
 import java.util.ArrayList;
 
+import chess.Chess;
 import chess.engine.board.BoardState;
 
 /**
@@ -11,7 +12,8 @@ import chess.engine.board.BoardState;
  */
 public class MoveTreeNode {
 
-	protected int m_level, m_value = 0;
+	protected int m_level = 0;
+	protected int m_value;
 	protected MoveTreeNode m_parent;
 	protected MoveTree m_tree;
 	protected BoardState m_info;
@@ -111,10 +113,11 @@ public class MoveTreeNode {
 	/**
 	 * Adds all child moves to the move tree
 	 */
-	public void addAllChildren() {
+	public MoveTreeNode[] addAllChildren() {
 		for (Move move : getAllChildMoves()) {
 			addChild(move);
 		}
+		return getChildren();
 	}
 	
 	/**
@@ -167,6 +170,97 @@ public class MoveTreeNode {
 	 */
 	public Move getMove() {
 		return m_move;
+	}	
+	
+	/**
+	 * Returns all nodes at a certain depth
+	 * @param depth the depth to get nodes at
+	 * @return the nodes at the desired depth
+	 */
+	public MoveTreeNode[] getNodesAtDepth(int depth) {
+		ArrayList<MoveTreeNode> nodesAtDepth = new ArrayList<MoveTreeNode>();
+		if (getLevel() == depth)
+			nodesAtDepth.add(this);
+		for (MoveTreeNode child : getChildren()) {
+			for (MoveTreeNode node : child.getNodesAtDepth(depth)) {
+				nodesAtDepth.add(node);
+			}
+		}
+		return nodesAtDepth.toArray(new MoveTreeNode[nodesAtDepth.size()]);
+	}
+	
+	/**
+	 * Gets leaves of this node
+	 * @return an array containing all leaves
+	 */
+	public MoveTreeNode[] getLeaves() {
+		ArrayList<MoveTreeNode> leaves = new ArrayList<MoveTreeNode>();
+		if (getChildren().length == 0)
+			leaves.add(this);
+		for (MoveTreeNode child : getChildren()) {
+			for (MoveTreeNode node : child.getLeaves()) {
+				leaves.add(node);
+			}
+		}
+		return leaves.toArray(new MoveTreeNode[leaves.size()]);
+	}
+	
+	/**
+	 * Calculates cases from this node down
+	 */
+	public int recursiveMinMax(int alpha, int beta) {
+		if (m_level >= m_tree.getDepth() || addAllChildren().length == 0) {
+			return m_info.getValueDifference();
+		}
+		
+		if (m_whiteTurn != Chess.getBoard().getPlayerIsWhite()) { //maximise
+			//player children
+			if (Chess.getBoard().getPlayerIsWhite()) { //white player (max)
+				int bestVal = -999999999;
+				
+				for (MoveTreeNode node : m_children) {
+					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
+					alpha = Math.max(alpha, m_value);
+					if (alpha > beta)
+						break;
+				}
+				return m_value;
+
+			} else { //black player (min)
+				int bestVal = 999999999;
+				
+				for (MoveTreeNode node : m_children) {
+					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
+					beta = Math.min(beta, m_value);
+					if (alpha > beta)
+						break;
+				}
+				return m_value;
+			}	
+		} else {	
+			//opponent children
+			if (Chess.getBoard().getPlayerIsWhite()) { //white opponent (max)
+				int bestVal = 999999999;
+				
+				for (MoveTreeNode node : m_children) {
+					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
+					beta = Math.min(beta, m_value);
+					if (alpha > beta)
+						break;
+				}
+				return m_value;
+			} else { //black opponent (min)
+				int bestVal = -999999999;
+				
+				for (MoveTreeNode node : m_children) {
+					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
+					alpha = Math.max(alpha, m_value);
+					if (alpha > beta)
+						break;
+				}
+				return m_value;
+			}	
+		}
 	}
 	
 }

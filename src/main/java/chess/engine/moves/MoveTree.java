@@ -14,7 +14,6 @@ import chess.engine.board.BoardState;
 public class MoveTree {
 
 	protected MoveTreeNode m_rootNode;
-	protected ArrayList<ArrayList<MoveTreeNode>> m_treePyramid; //pyramid data structure for tree, because the recursive functions are technically slightly more cpu intensive, while this is (significantly) more memory intensive, will be removed if i switch to recursive for AB pruning
 	protected int m_depth;
 	
 	/**
@@ -36,36 +35,7 @@ public class MoveTree {
 	 * @return an array of nodes at the specified depth
 	 */
 	public MoveTreeNode[] getNodesAtDepth(int depth) {
-		
-		if (m_treePyramid == null) {
-			m_treePyramid = new ArrayList<ArrayList<MoveTreeNode>>();
-			m_treePyramid.add(new ArrayList<MoveTreeNode>(Arrays.asList(new MoveTreeNode[] {m_rootNode})));
-		}
-		
-		if (m_treePyramid.size() < depth+1) {
-			for (int i = m_treePyramid.size()-1; i < depth; i++) {
-		
-				m_treePyramid.add(new ArrayList<MoveTreeNode>());
-		
-				for (MoveTreeNode node : m_treePyramid.get(i)) {
-					m_treePyramid.get(i+1).addAll(Arrays.asList(node.getChildren()));
-				}
-		
-				if (m_treePyramid.remove(new ArrayList<MoveTreeNode>())) { //removes if empty
-					//throw exception here
-					break;
-				}
-				
-			}
-		}
-		
-		return m_treePyramid.get(depth).toArray(new MoveTreeNode[m_treePyramid.get(depth).size()]);
-	}
-	
-	public void printPyramid() {
-		for (int i = 0; i < m_treePyramid.size(); i++) {
-			System.out.println(i + ":\t" + m_treePyramid.get(i).size());
-		}
+		return m_rootNode.getNodesAtDepth(depth);
 	}
 	
 	/**
@@ -111,6 +81,13 @@ public class MoveTree {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * gets the depth of this tree
+	 */
+	public int getDepth() {
+		return m_depth;
 	}
 	
 }
