@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 
 import chess.engine.EngineConstants;
 import chess.engine.moves.MoveTemplate;
-import chess.engine.moves.piecemoves.Castling;
 import chess.engine.moves.piecemoves.KingDiagonal;
 import chess.engine.moves.piecemoves.KingMove;
 import chess.renderer.RenderConstants;
@@ -12,7 +11,7 @@ import chess.renderer.RenderConstants;
 public class King extends Piece {
 
 	public King(boolean isWhite) {
-		super(EngineConstants.KING_VALUE, isWhite, new MoveTemplate[] {new KingMove(), new KingDiagonal(), new Castling()});
+		super(EngineConstants.KING_VALUE, isWhite, new MoveTemplate[] {new KingMove(), new KingDiagonal()});
 		
 		if (m_blackImage == null || m_whiteImage == null) {
 			try {

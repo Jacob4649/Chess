@@ -8,7 +8,6 @@ import chess.Chess;
 import chess.engine.board.Board;
 import chess.engine.moves.Move;
 import chess.engine.moves.MoveTemplate;
-import chess.engine.moves.piecemoves.Castling;
 
 /**
  * Class representing a piece
@@ -136,9 +135,6 @@ public abstract class Piece {
 	public Move[] getRawMoves(Board board) {
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (MoveTemplate template : m_possibleMoves) {
-			
-			if (template instanceof Castling) //dont count castling when getting raw moves
-				continue;
 			
 			for (Move move : template.getMoves(m_position[0], m_position[1], board)) {
 				moves.add(move);
