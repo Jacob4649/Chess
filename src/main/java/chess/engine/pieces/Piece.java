@@ -78,23 +78,25 @@ public abstract class Piece {
 	 * @param move the move to execute
 	 */
 	public void move(Move move) {
-		if (Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) != null) { //if a piece is at the end position
-			Chess.getBoard().capture(Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]));
+		if (!Chess.getBoard().getWinConditions(m_isWhite)) {
+			if (Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]) != null) { //if a piece is at the end position
+				Chess.getBoard().capture(Chess.getBoard().getPieceAt(move.getEndPosition()[0], move.getEndPosition()[1]));
+			}
+		
+			Chess.getBoard().movePiece(this, move.getEndPosition()[0], move.getEndPosition()[1]);
+			setPosition(move.getEndPosition()[0], move.getEndPosition()[1]);
+		
+			move.onMove();
+		
+			Chess.getBoardPanel().setLastMove(move);
+		
+			//TODO : consider getting rid of updatepositions, it is somewhat pointless if you can manage without it
+			Chess.getBoard().updatePositions();
+		
+			Chess.getBoard().resetMoveStorage();
+		
+			m_moveCount++;
 		}
-		
-		Chess.getBoard().movePiece(this, move.getEndPosition()[0], move.getEndPosition()[1]);
-		setPosition(move.getEndPosition()[0], move.getEndPosition()[1]);
-		
-		move.onMove();
-		
-		Chess.getBoardPanel().setLastMove(move);
-		
-		//TODO : consider getting rid of updatepositions, it is somewhat pointless if you can manage without it
-		Chess.getBoard().updatePositions();
-		
-		Chess.getBoard().resetMoveStorage();
-		
-		m_moveCount++;
 	}
 	
 	/**

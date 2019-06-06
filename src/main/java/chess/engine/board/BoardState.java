@@ -142,7 +142,6 @@ public class BoardState extends Board {
 				}					
 			}
 		}
-
 	}
 	
 	/**
@@ -167,6 +166,23 @@ public class BoardState extends Board {
 	 */
 	public int getValueDifference() {
 		return m_whiteValue - m_blackValue;
+	}
+	
+	/**
+	 * Gets whether this board is in a stalemate or a checkmate
+	 * @param whiteTurn if it was whites turn at the time of calling
+	 * @return true if the board is in a stalemate or a checkmate
+	 */
+	@Override
+	public boolean getWinConditions(boolean whiteTurn) {
+		boolean end = super.getWinConditions(whiteTurn);
+		if (end) {
+			if (m_whiteCheckmate)
+				m_blackValue += 9999999;
+			if (m_blackCheckmate)
+				m_whiteValue += 9999999;
+		}
+		return end;
 	}
 	
 }

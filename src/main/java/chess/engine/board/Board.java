@@ -25,6 +25,7 @@ public class Board {
 	protected ArrayList<Piece> m_whiteCaptured = new ArrayList<Piece>();
 	protected ArrayList<Piece> m_blackCaptured = new ArrayList<Piece>();
 	protected boolean m_playerIsWhite = true; 
+	protected boolean m_stalemate, m_whiteCheckmate, m_blackCheckmate = false;
 	
 	/**
 	 * Creates a new board with pieces in starting positions
@@ -281,6 +282,32 @@ public class Board {
 	public void resetMoveStorage() {
 		m_blackMoves = null;
 		m_whiteMoves = null;
+	}
+	
+	/**
+	 * Gets whether this board is in a stalemate or a checkmate
+	 * @param whiteTurn if it was whites turn at the time of calling
+	 * @return true if the board is in a stalemate or a checkmate
+	 */
+	public boolean getWinConditions(boolean whiteTurn) {
+		if (whiteTurn) {
+			if (getWhiteMoves().length == 0) {
+				if (getInCheck(true)) { //checkmate
+					m_whiteCheckmate = true;
+				} else { //stalemate
+					m_stalemate = true;
+				}
+			}
+		} else {
+			if (getBlackMoves().length == 0) {
+				if (getInCheck(false)) { //checkmate
+					m_blackCheckmate = true;
+				} else { //stalemate
+					m_stalemate = true;
+				}
+			}			
+		}
+		return (m_stalemate || m_blackCheckmate || m_whiteCheckmate);
 	}
 	
 }
