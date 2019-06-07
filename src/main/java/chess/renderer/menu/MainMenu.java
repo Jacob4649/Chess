@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 
 import chess.Chess;
 import chess.renderer.RenderConstants;
+import chess.renderer.rules.RulesWindow;
 
 public class MainMenu {
 
@@ -44,6 +45,12 @@ public class MainMenu {
 		
 		JButton rulesButton = new JButton("Rules");
 		rulesButton.setBounds(127, 229, 180, 23);
+		rulesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				RulesWindow.createRulesWindow();
+			}
+		});
 		frame.getContentPane().add(rulesButton);
 		
 		JLabel title = new JLabel("Jacob's Chess");
