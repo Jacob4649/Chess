@@ -40,7 +40,7 @@ public class RenderConstants {
 	public static final int SMALL_FONT_SIZE = 25;
 	public static final String FONT = "Arial";
 	public static final String[] PIECE_COLORS = new String[] {"White", "Black"};
-	public static final String[] LAYOUT_OPTIONS = new String[] {"Classic", "Upside Down", "End Game", "Test"};
+	public static final String[] LAYOUT_OPTIONS = new String[] {"Classic", "Upside Down", "End Game", "Peasants", "Brigade"};
 	
 	//image locations
 	public static final String WHITE_PAWN_IMAGE = "/resources/whitePawn.png";

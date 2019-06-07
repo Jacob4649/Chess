@@ -84,8 +84,10 @@ public class MainMenu {
 					Chess.getBoard().setUpsideDownLayout();
 				else if (layoutSelector.getSelectedItem().toString().equals("End Game"))
 					Chess.getBoard().setEndgameLayout();
-				else if (layoutSelector.getSelectedItem().toString().equals("Test"))
-					Chess.getBoard().setTestLayout();
+				else if (layoutSelector.getSelectedItem().toString().equals("Peasants"))
+					Chess.getBoard().setPeasantsLayout();
+				else if (layoutSelector.getSelectedItem().toString().equals("Brigade"))
+					Chess.getBoard().setBrigadeLayout();
 				Chess.firstMove();
 				frame.dispose();
 				

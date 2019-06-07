@@ -166,6 +166,62 @@ public class Board {
 	}
 	
 	/**
+	 * Sets the layout to peasants layout
+	 */
+	public void setPeasantsLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			m_piecePositions[i][1] = new Pawn(true);
+		}
+		
+		m_piecePositions[1][7] = new Knight(false);
+		m_piecePositions[2][7] = new Knight(false);
+		m_piecePositions[5][7] = new Knight(false);
+		m_piecePositions[6][7] = new Knight(false);
+		
+		m_piecePositions[4][6] = new Pawn(false);
+		
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[4][0] = m_whiteKing; //white king
+		
+		updatePositions();
+	}
+	
+	/**
+	 * Sets the layout to brigade layout
+	 */
+	public void setBrigadeLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			m_piecePositions[i][1] = new Pawn(true);
+			m_piecePositions[i][6] = new Pawn(false);
+		}
+		
+		m_piecePositions[0][7] = new Knight(false);
+		m_piecePositions[1][7] = new Knight(false);
+		m_piecePositions[2][7] = new Knight(false);
+		m_piecePositions[3][7] = new Knight(false);
+		m_piecePositions[5][7] = new Knight(false);
+		m_piecePositions[6][7] = new Knight(false);
+		m_piecePositions[7][7] = new Knight(false);
+		
+		m_piecePositions[1][0] = new Queen(true);
+		m_piecePositions[3][0] = new Queen(true);
+		m_piecePositions[6][0] = new Queen(true);
+				
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[4][0] = m_whiteKing; //white king
+		
+		updatePositions();
+	}
+	
+	/**
 	 * Sets the layout of the board to a test layout
 	 */
 	public void setTestLayout() {
