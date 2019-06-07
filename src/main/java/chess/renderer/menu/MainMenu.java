@@ -18,6 +18,8 @@ import chess.renderer.rules.RulesWindow;
 public class MainMenu {
 
 	private JFrame frame;
+	private JComboBox layoutSelector;
+	private JComboBox colorSelector;
 
 	/**
 	 * Launch the application.
@@ -59,7 +61,7 @@ public class MainMenu {
 		title.setBounds(10, 11, 414, 45);
 		frame.getContentPane().add(title);
 		
-		JComboBox colorSelector = new JComboBox(RenderConstants.PIECE_COLORS);
+		colorSelector = new JComboBox(RenderConstants.PIECE_COLORS);
 		colorSelector.setBounds(10, 230, 107, 20);
 		frame.getContentPane().add(colorSelector);
 		
@@ -68,7 +70,7 @@ public class MainMenu {
 		colorLabel.setBounds(10, 205, 107, 14);
 		frame.getContentPane().add(colorLabel);
 		
-		JComboBox layoutSelector = new JComboBox(RenderConstants.LAYOUT_OPTIONS);
+		layoutSelector = new JComboBox(RenderConstants.LAYOUT_OPTIONS);
 		layoutSelector.setBounds(317, 230, 107, 20);
 		frame.getContentPane().add(layoutSelector);
 		
