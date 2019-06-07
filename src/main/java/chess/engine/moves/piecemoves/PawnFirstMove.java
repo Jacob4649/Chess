@@ -1,5 +1,6 @@
 package chess.engine.moves.piecemoves;
 
+import chess.engine.EngineConstants;
 import chess.engine.board.Board;
 import chess.engine.moves.MoveTemplate;
 
@@ -20,7 +21,7 @@ public class PawnFirstMove extends MoveTemplate {
 	 */
 	@Override
 	public boolean getConditions(int hor, int vert, Board board) {
-		return board.getPieceAt(hor, vert).getMoveCount() == 0 && board.getPieceAt(hor, vert + (board.getPieceAt(hor, vert).getIsWhite() ? 1 : -1)) == null;
+		return board.getPieceAt(hor, vert).getMoveCount() == 0 && board.getPieceAt(hor, vert + (board.getPieceAt(hor, vert).getIsWhite() ? 1 : -1)) == null && vert == (board.getPieceAt(hor, vert).getIsWhite() ? 1 : EngineConstants.BOARD_SIZE-2);
 	}
 	
 }

@@ -46,14 +46,14 @@ public class Move {
 	 * Called after this move executes
 	 */
 	public void onMove() {
-		m_moveTemplate.onMove(Chess.getBoard());
+		onMoveOnBoard(Chess.getBoard());
 	}
 
 	/**
 	 * Called after this move executes
 	 */
 	public void onMoveOnBoard(Board board) {
-		m_moveTemplate.onMove(board);
+		m_moveTemplate.onMove(board, m_endPosition[0], m_endPosition[1]);
 	}
 	
 	/**

@@ -26,6 +26,7 @@ public class Board {
 	protected ArrayList<Piece> m_blackCaptured = new ArrayList<Piece>();
 	protected boolean m_playerIsWhite = true; 
 	protected boolean m_stalemate, m_whiteCheckmate, m_blackCheckmate = false;
+	protected int m_blackValue, m_whiteValue = 0;
 	
 	/**
 	 * Creates a new board with pieces in starting positions
@@ -69,6 +70,130 @@ public class Board {
 	}
 	
 	/**
+	 * Sets the layout of this board to the classic layout
+	 */
+	public void setClassicLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			m_piecePositions[i][1] = new Pawn(true);
+			m_piecePositions[i][6] = new Pawn(false);
+		}
+		
+		m_piecePositions[1][0] = new Knight(true); //white knights
+		m_piecePositions[6][0] = new Knight(true);
+		
+		m_piecePositions[1][7] = new Knight(false); //black knights
+		m_piecePositions[6][7] = new Knight(false);
+		
+		m_piecePositions[0][0] = new Rook(true); //white rooks
+		m_piecePositions[7][0] = new Rook(true);
+		
+		m_piecePositions[0][7] = new Rook(false); //black rooks
+		m_piecePositions[7][7] = new Rook(false);
+		
+		m_piecePositions[2][0] = new Bishop(true); //white bishops
+		m_piecePositions[5][0] = new Bishop(true);
+		
+		m_piecePositions[2][7] = new Bishop(false); //black bishops
+		m_piecePositions[5][7] = new Bishop(false);
+		
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[4][0] = m_whiteKing; //white king
+		
+		m_piecePositions[3][7] = new Queen(false); //black queen
+		m_piecePositions[3][0] = new Queen(true); //white queen
+		
+		updatePositions();
+	}
+	
+	public void setUpsideDownLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			m_piecePositions[i][1] = new Pawn(false);
+			m_piecePositions[i][6] = new Pawn(true);
+		}
+		
+		m_piecePositions[1][0] = new Knight(false); //black knights
+		m_piecePositions[6][0] = new Knight(false);
+		
+		m_piecePositions[1][7] = new Knight(true); //white knights
+		m_piecePositions[6][7] = new Knight(true);
+		
+		m_piecePositions[0][0] = new Rook(false); //black rooks
+		m_piecePositions[7][0] = new Rook(false);
+		
+		m_piecePositions[0][7] = new Rook(true); //white rooks
+		m_piecePositions[7][7] = new Rook(true);
+		
+		m_piecePositions[2][0] = new Bishop(false); //black bishops
+		m_piecePositions[5][0] = new Bishop(false);
+		
+		m_piecePositions[2][7] = new Bishop(true); //white bishops
+		m_piecePositions[5][7] = new Bishop(true);
+		
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_whiteKing; //white king
+		m_piecePositions[4][0] = m_blackKing; //black king
+		
+		m_piecePositions[3][7] = new Queen(true);  //white queen
+		m_piecePositions[3][0] = new Queen(false); //black queen
+		
+		updatePositions();
+	}
+	
+	/**
+	 * Sets the layout to endgame layout
+	 */
+	public void setEndgameLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			m_piecePositions[i][1] = new Pawn(true);
+			m_piecePositions[i][6] = new Pawn(false);
+		}
+		
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[4][0] = m_whiteKing; //white king
+		
+		updatePositions();
+	}
+	
+	/**
+	 * Sets the layout of the board to a test layout
+	 */
+	public void setTestLayout() {
+		m_piecePositions = new Piece[EngineConstants.BOARD_SIZE][EngineConstants.BOARD_SIZE];
+		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) { //lays out two rows of pawns
+			//m_piecePositions[i][1] = new Pawn(true);
+			//m_piecePositions[i][6] = new Pawn(false);
+		}
+		
+		
+		
+		m_piecePositions[0][7] = new Rook(false); //black rooks
+		m_piecePositions[2][7] = new Rook(false);
+		m_piecePositions[2][6] = new Rook(false);
+				
+		m_blackKing = new King(false);
+		m_whiteKing = new King(true);
+		
+		m_piecePositions[4][7] = m_blackKing; //black king
+		m_piecePositions[1][0] = m_whiteKing; //white king
+		
+		//m_piecePositions[4][3] = new Queen(false); //black queen
+		//m_piecePositions[3][0] = new Queen(true); //white queen
+		
+		updatePositions();
+	}
+	
+	/**
 	 * Called to set every pieces position to its actual position
 	 */
 	public void updatePositions() {
@@ -79,6 +204,21 @@ public class Board {
 					piece.setPosition(i, j);
 			}	
 		}
+	}
+	
+	/**
+	 * Places a piece at a specified position
+	 * @param xPosition the x position 
+	 * @param yPosition the y position 
+	 * @param piecethe piece to assign to this location
+	 */
+	public void setPieceAt(int xPosition, int yPosition, Piece piece) {
+		try {
+			m_piecePositions[xPosition][yPosition] = piece;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			
+		}
+		
 	}
 	
 	/**
@@ -308,6 +448,89 @@ public class Board {
 			}			
 		}
 		return (m_stalemate || m_blackCheckmate || m_whiteCheckmate);
+	}
+	
+	/**
+	 * Gets if the current situation is a black checkmate
+	 * @return true if black checkmate
+	 */
+	public boolean getBlackCheckmate() {
+		return m_blackCheckmate;
+	}
+	
+	/**
+	 * Gets if the current situation is a white checkmate
+	 * @return true if white checkmate
+	 */
+	public boolean getWhiteCheckmate() {
+		return m_whiteCheckmate;
+	}
+	
+	/**
+	 * Gets if the current situation is a stalemate
+	 * @return true if stalemate
+	 */
+	public boolean getStalemate() {
+		return m_stalemate;
+	}
+	
+	/**
+	 * Gets the total value of all pieces on the board
+	 */
+	public void calculateValues() {
+		for (Piece[] row : m_piecePositions) {
+			for (Piece piece : row) {
+				if (piece != null) {
+					if (piece instanceof Pawn && piece.getPosition()[1] == (piece.getIsWhite() ? EngineConstants.BOARD_SIZE-2 : 1))
+						m_whiteValue += EngineConstants.PAWN_CLOSE_TO_PROMOTE_BONUS;
+					if (piece.getIsWhite())
+						m_whiteValue += piece.getValue();
+					else
+						m_blackValue += piece.getValue();
+				}					
+			}
+		}
+		if (getInCheck(true)) {
+			m_blackValue += EngineConstants.CHECK_VALUE_BONUS;
+		}
+		if (getInCheck(false)) {
+			m_whiteValue += EngineConstants.CHECK_VALUE_BONUS;
+		}
+	}
+	
+	/**
+	 * Gets the total white value for this board state
+	 * @return m_whiteValue
+	 */
+	public int getWhiteValue() {
+		calculateValues();
+		return m_whiteValue;
+	}
+	
+	/**
+	 * Gets the total black value for this board state
+	 * @return m_blackValue
+	 */
+	public int getBlackValue() {
+		calculateValues();
+		return m_blackValue;
+	}
+	
+	/**
+	 * Gets (whiteValue - blackValue)
+	 * @return m_whiteValue - m_blackValue
+	 */
+	public int getValueDifference() {
+		calculateValues();
+		return m_whiteValue - m_blackValue;
+	}
+	
+	/**
+	 * Gets whether this boardstate is in the endgame
+	 * @return true if this boardstate is in the endgame
+	 */
+	public boolean getIsEndgame() {
+		return m_whiteValue < EngineConstants.ENDGAME_THRESHOLD || m_blackValue < EngineConstants.ENDGAME_THRESHOLD;
 	}
 	
 }

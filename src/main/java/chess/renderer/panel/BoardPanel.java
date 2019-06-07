@@ -11,7 +11,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -19,8 +18,10 @@ import javax.swing.JPanel;
 import chess.Chess;
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
+import chess.engine.pieces.King;
 import chess.engine.pieces.Piece;
 import chess.renderer.RenderConstants;
+import chess.renderer.menu.MainMenu;
 
 public class BoardPanel extends JPanel {
 
@@ -39,41 +40,52 @@ public class BoardPanel extends JPanel {
 	public BoardPanel() {
 		setBorder(BorderFactory.createLineBorder(RenderConstants.BOARD_BORDER_COLOR));
 		setBackground(RenderConstants.BOARD_LIGHT_COLOR);
-		
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				
-				if (!m_moveLock) { //like a lock, blocks this code from running once the thread below is in progress
-					m_moveLock = true;
-					m_mouseClickPos = new int[] {e.getX(), e.getY()};
-					new Thread(new Runnable() { //allows UI to keep functioning
-						public void run() {
-							int[] pos = pixelToPos(m_mouseClickPos[0], m_mouseClickPos[1]);
-							
-							Move move = null;
-							
-							if (m_selectedPiece != null) {
-								move = m_selectedPiece.getMoveThatEndsAt(pos[0], pos[1]);
-							} 
-							
-							if (move != null) {
-								m_selectedPiece.move(move);
-								m_selectedPiece = null;
-								Chess.getBoard().getWinConditions(Chess.getBoard().getPlayerIsWhite());
-								//opponent turn
-								Chess.getOpponent().takeTurn();
-							} else {
-								m_selectedPiece = Chess.getBoard().getPieceAt(pos[0], pos[1]);
-								if (m_selectedPiece != null && m_selectedPiece.getIsWhite() != Chess.getBoard().getPlayerIsWhite())
+		try {
+			addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					
+					if (!m_moveLock && !Chess.getBoard().getWinConditions(Chess.getBoard().getPlayerIsWhite())) { //like a lock, blocks this code from running once the thread below is in progress, also block if game is over
+						m_moveLock = true;
+						m_mouseClickPos = new int[] {e.getX(), e.getY()};
+						new Thread(new Runnable() { //allows UI to keep functioning
+							public void run() {
+								int[] pos = pixelToPos(m_mouseClickPos[0], m_mouseClickPos[1]);
+								
+								Move move = null;
+								
+								if (m_selectedPiece != null) {
+									move = m_selectedPiece.getMoveThatEndsAt(pos[0], pos[1]);
+								} 
+								
+								if (move != null) {
+									m_selectedPiece.move(move);
 									m_selectedPiece = null;
+									
+									//opponent turn
+									if (!Chess.getBoard().getWinConditions(!Chess.getBoard().getPlayerIsWhite()))
+										Chess.getOpponent().takeTurn();
+								} else {
+									m_selectedPiece = Chess.getBoard().getPieceAt(pos[0], pos[1]);
+									if (m_selectedPiece != null && m_selectedPiece.getIsWhite() != Chess.getBoard().getPlayerIsWhite())
+										m_selectedPiece = null;
+								}
+								
+								m_moveLock = false;
 							}
-							
-							m_moveLock = false;
+						}).start();
+					} else if (Chess.getBoard().getBlackCheckmate() || Chess.getBoard().getWhiteCheckmate() || Chess.getBoard().getStalemate()) { //exit to menu
+						m_mouseClickPos = new int[] {e.getX(), e.getY()};
+						int[] pos = pixelToPos(m_mouseClickPos[0], m_mouseClickPos[1]);
+						if (Chess.getBoard().getPieceAt(pos[0], pos[1]) instanceof King) {
+							MainMenu.startMenu();
 						}
-					}).start();
+					}
 				}
-			}
-		}); 
+			}); 
+		} catch (Exception e) {
+			
+		}
+		
 	}
 	
 	@Override
@@ -126,8 +138,56 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		
-		//paints text if it is opponent's turn
-		if (Chess.getOpponent().getIsTurn()) {
+		//paints text in certain cases
+		if (Chess.getBoard().getWhiteCheckmate()) {
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.BLACK_WIN_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+		
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.SMALL_FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (4.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.RETURN_TO_MENU_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (5.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+		} else if (Chess.getBoard().getBlackCheckmate()) {
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.WHITE_WIN_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));		
+		
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.SMALL_FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (4.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.RETURN_TO_MENU_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (5.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+		} else if (Chess.getBoard().getStalemate()) {
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.STALEMATE_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+		
+			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.SMALL_FONT_SIZE));
+			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
+			g2D.fillRect(0, ((int) (4.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)), RenderConstants.PANEL_HORIZONTAL, ((int) (2.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+			g2D.setColor(RenderConstants.BOARD_TEXT_COLOR);
+			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+			g2D.drawString(RenderConstants.RETURN_TO_MENU_MESSAGE, ((int) (((double) RenderConstants.PANEL_HORIZONTAL)/(double) EngineConstants.BOARD_SIZE)), ((int) (5.0 * ((double) RenderConstants.PANEL_VERTICAL)/(double) EngineConstants.BOARD_SIZE)));
+		} else if (Chess.getOpponent().getIsTurn()) {
 			g2D.setFont(new Font(RenderConstants.FONT, Font.ITALIC, RenderConstants.FONT_SIZE));
 			g2D.setColor(RenderConstants.BOARD_TEXT_BACKGROUND_COLOR);
 			g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.85f));
@@ -189,6 +249,13 @@ public class BoardPanel extends JPanel {
 	 */
 	public void setMoveLock(boolean moveLock) {
 		m_moveLock = moveLock;
+	}
+	
+	/**
+	 * Goes back to the main menu after 5 seconds
+	 */
+	public void backToMenu() {
+		
 	}
 	
 }

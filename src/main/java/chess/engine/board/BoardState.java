@@ -13,9 +13,6 @@ import chess.engine.pieces.Piece;
  *
  */
 public class BoardState extends Board {
-
-	protected int m_whiteValue = 0;
-	protected int m_blackValue = 0;
 	
 	/**
 	 * Creates a board state with a move applied to it
@@ -126,46 +123,6 @@ public class BoardState extends Board {
 		}
 		m_whiteMoves = moves.toArray(new Move[moves.size()]);
 		return m_whiteMoves;
-	}
-	
-	/**
-	 * Gets the total value of all pieces on the board
-	 */
-	public void calculateValues() {
-		for (Piece[] row : m_piecePositions) {
-			for (Piece piece : row) {
-				if (piece != null) {
-					if (piece.getIsWhite())
-						m_whiteValue += piece.getValue();
-					else
-						m_blackValue += piece.getValue();
-				}					
-			}
-		}
-	}
-	
-	/**
-	 * Gets the total white value for this board state
-	 * @return m_whiteValue
-	 */
-	public int getWhiteValue() {
-		return m_whiteValue;
-	}
-	
-	/**
-	 * Gets the total black value for this board state
-	 * @return m_blackValue
-	 */
-	public int getBlackValue() {
-		return m_blackValue;
-	}
-	
-	/**
-	 * Gets (whiteValue - blackValue)
-	 * @return m_whiteValue - m_blackValue
-	 */
-	public int getValueDifference() {
-		return m_whiteValue - m_blackValue;
 	}
 	
 	/**

@@ -31,30 +31,30 @@ public class Chess {
 	protected static Opponent m_opponent = new Opponent();
 	protected static BoardPanel m_boardPanel = new BoardPanel();
 	
-	Chess() {
+	/**
+	 * Creates a new game of chess
+	 * @param isWhite whether the player is white
+	 */
+	public Chess(boolean isWhite) {
+		
+		m_board = new Board();
+		m_opponent = new Opponent();
+		m_boardPanel = new BoardPanel();
+		
+		m_board.setPlayerIsWhite(isWhite);
 
 		JFrame frame = new JFrame("Chess");
 		
 		frame.getContentPane().add(m_boardPanel);
 		frame.pack();
 		
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         
         frame.setSize(RenderConstants.WINDOW_HORIZONTAL, RenderConstants.WINDOW_VERTICAL);
         
         frame.setResizable(false);
 		
         frame.setVisible(true);
-        
-		if (!m_board.getPlayerIsWhite()) { //have opponent make first move if player is white
-			new Thread(new Runnable() { //allows UI to keep running
-				public void run() {
-					m_boardPanel.setMoveLock(true);
-					m_opponent.takeTurn();
-					m_boardPanel.setMoveLock(false);
-				}
-			}).start();
-		}
 			
 	}
 	
@@ -82,8 +82,19 @@ public class Chess {
 		return m_boardPanel;
 	}
 	
-	public static void main(String[] args) {
-		new Chess();
+	/**
+	 * Has the computer make the first move if necessary
+	 */
+	public static void firstMove() {
+		if (!m_board.getPlayerIsWhite()) { //have opponent make first move if player is white
+			new Thread(new Runnable() { //allows UI to keep running
+				public void run() {
+					m_boardPanel.setMoveLock(true);
+					m_opponent.takeTurn();
+					m_boardPanel.setMoveLock(false);
+				}
+			}).start();
+		}
 	}
 	
 }

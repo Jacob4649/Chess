@@ -70,8 +70,10 @@ public abstract class MoveTemplate {
 	/**
 	 * Calls onMove on a specific board
 	 * @param board the board to call it on
+	 * @param hot the horizontal index of the position of the piece calling onMove
+	 * @param vert the vertical index of the position of the piece calling onMove
 	 */
-	public void onMove(Board board) {
+	public void onMove(Board board, int hor, int vert) {
 		
 	}
 	

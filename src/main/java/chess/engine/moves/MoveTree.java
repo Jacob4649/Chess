@@ -58,6 +58,7 @@ public class MoveTree {
 			depth = m_depth;
 		for (int i = depth; i >= 0; i--) {
 			for (MoveTreeNode node : getNodesAtDepth(i)) {
+				node.getBoardState().getWinConditions(!node.getIsWhiteTurn());
 				if (node.getChildren().length > 0)
 					node.setValue(node.getChildren()[0].getValue());
 				else
