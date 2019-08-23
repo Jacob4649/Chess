@@ -112,6 +112,8 @@ public class MoveTreeNode {
 	
 	/**
 	 * Adds all child moves to the move tree
+	 * 
+	 * @return an array containing all added children
 	 */
 	public MoveTreeNode[] addAllChildren() {
 		for (Move move : getAllChildMoves()) {
@@ -216,7 +218,7 @@ public class MoveTreeNode {
 		if (m_whiteTurn != Chess.getBoard().getPlayerIsWhite()) { //maximise
 			//player children
 			if (Chess.getBoard().getPlayerIsWhite()) { //white player (max)
-				int bestVal = -999999999;
+				m_value = -999999999;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
@@ -224,10 +226,9 @@ public class MoveTreeNode {
 					if (alpha > beta)
 						break;
 				}
-				return m_value;
 
 			} else { //black player (min)
-				int bestVal = 999999999;
+				m_value = 999999999;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
@@ -235,12 +236,11 @@ public class MoveTreeNode {
 					if (alpha > beta)
 						break;
 				}
-				return m_value;
 			}	
 		} else {	
 			//opponent children
 			if (Chess.getBoard().getPlayerIsWhite()) { //white opponent (max)
-				int bestVal = 999999999;
+				m_value = 999999999;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
@@ -248,9 +248,9 @@ public class MoveTreeNode {
 					if (alpha > beta)
 						break;
 				}
-				return m_value;
+				
 			} else { //black opponent (min)
-				int bestVal = -999999999;
+				m_value = -999999999;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
@@ -258,9 +258,19 @@ public class MoveTreeNode {
 					if (alpha > beta)
 						break;
 				}
-				return m_value;
 			}	
 		}
+		
+		deleteChildren();
+		return m_value;
+	}
+	
+	/**
+	 * Deletes all children of this node
+	 */
+	public void deleteChildren() {
+		m_children.clear();
+		System.gc();
 	}
 	
 }

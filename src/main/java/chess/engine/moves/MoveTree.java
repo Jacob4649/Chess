@@ -25,8 +25,12 @@ public class MoveTree {
 		m_rootNode = new MoveTreeNode(boardState, this, whiteTurn);
 		m_depth = depth;
 		
-		populateMoveTree();
-		calculateCases(m_depth);
+		//populateMoveTree();
+		//calculateCases(m_depth);
+		
+		for (MoveTreeNode child : m_rootNode.addAllChildren()) {
+			child.recursiveMinMax(-999999999, 999999999);
+		}
 	}
 	
 	/**
