@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import chess.engine.EngineConstants;
 import chess.engine.moves.Move;
 import chess.engine.pieces.King;
+import chess.engine.pieces.Knight;
 import chess.engine.pieces.Piece;
 
 /**
@@ -69,7 +70,7 @@ public class BoardState extends Board {
 		for (int i = 0; i < EngineConstants.BOARD_SIZE; i++) {
 			System.out.print("\t");
 			for (int j = 0; j < EngineConstants.BOARD_SIZE; j++) {
-				System.out.print(("" + board.getPieceAt(j, i)).charAt(0));
+				System.out.print(("" + ((board.getPieceAt(j, i) instanceof Knight) ? "k" : (board.getPieceAt(j, i)).toString().charAt(0))));
 			}
 			System.out.println();
 		}
@@ -81,9 +82,11 @@ public class BoardState extends Board {
 	 */
 	@Override
 	public Move[] getBlackMoves() {
-		updatePositions();
+		//TODO : potential problem, unclear as of right now, may need to uncomment updatePositions, and remove the call below the first if statement
+		//updatePositions();
 		if (m_blackMoves != null)
 			return m_blackMoves;
+		updatePositions();
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
@@ -106,9 +109,10 @@ public class BoardState extends Board {
 	 */
 	@Override
 	public Move[] getWhiteMoves() {
-		updatePositions();
+		//updatePositions();
 		if (m_whiteMoves != null)
 			return m_whiteMoves;
+		updatePositions();
 		ArrayList<Move> moves = new ArrayList<Move>();
 		for (Piece[] row : m_piecePositions) {
 			for (Piece piece : row) {
@@ -135,9 +139,9 @@ public class BoardState extends Board {
 		boolean end = super.getWinConditions(whiteTurn);
 		if (end) {
 			if (m_whiteCheckmate)
-				m_blackValue += 9999999;
+				m_blackValue += EngineConstants.POSITIVE_INFINITY;
 			if (m_blackCheckmate)
-				m_whiteValue += 9999999;
+				m_whiteValue += EngineConstants.POSITIVE_INFINITY;
 		}
 		return end;
 	}

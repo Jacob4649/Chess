@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import chess.Chess;
+import chess.engine.EngineConstants;
 import chess.engine.board.BoardState;
 
 /**
@@ -25,12 +26,7 @@ public class MoveTree {
 		m_rootNode = new MoveTreeNode(boardState, this, whiteTurn);
 		m_depth = depth;
 		
-		//populateMoveTree();
-		//calculateCases(m_depth);
-		
-		for (MoveTreeNode child : m_rootNode.addAllChildren()) {
-			child.recursiveMinMax(-999999999, 999999999);
-		}
+		calculateAlphaBeta();
 	}
 	
 	/**
@@ -50,6 +46,15 @@ public class MoveTree {
 			for (MoveTreeNode node : getNodesAtDepth(i)) {
 				node.addAllChildren();
 			}
+		}
+	}
+	
+	/**
+	 * Performs alpha beta pruning on an empty root node
+	 */
+	public void calculateAlphaBeta() {
+		for (MoveTreeNode child : m_rootNode.addAllChildren()) {
+			child.recursiveMinMax(EngineConstants.NEGATIVE_INFINITY, EngineConstants.POSITIVE_INFINITY);
 		}
 	}
 	

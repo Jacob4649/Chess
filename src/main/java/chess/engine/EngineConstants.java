@@ -10,10 +10,14 @@ public class EngineConstants {
 	//board values
 	public static final int BOARD_SIZE = 8;
 	
+	//misc values
+	public static final int NEGATIVE_INFINITY = -999999999;
+	public static final int POSITIVE_INFINITY = 999999999;
+	
 	//AI values
 	public static final int AI_SEARCH_DEPTH = 3;
 	public static final boolean ENABLE_CAPTURE_PRIORITISING = false;
-	public static final boolean ENABLE_CAPTURE_PRIORITISING_IN_ENDGAME = true;
+	public static final boolean ENABLE_CAPTURE_PRIORITISING_IN_ENDGAME = false;
 	public static final int ENDGAME_THRESHOLD = 930;
 	
 	//eval function values

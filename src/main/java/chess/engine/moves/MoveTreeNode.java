@@ -3,6 +3,7 @@ package chess.engine.moves;
 import java.util.ArrayList;
 
 import chess.Chess;
+import chess.engine.EngineConstants;
 import chess.engine.board.BoardState;
 
 /**
@@ -218,7 +219,7 @@ public class MoveTreeNode {
 		if (m_whiteTurn != Chess.getBoard().getPlayerIsWhite()) { //maximise
 			//player children
 			if (Chess.getBoard().getPlayerIsWhite()) { //white player (max)
-				m_value = -999999999;
+				m_value = EngineConstants.NEGATIVE_INFINITY;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
@@ -228,7 +229,7 @@ public class MoveTreeNode {
 				}
 
 			} else { //black player (min)
-				m_value = 999999999;
+				m_value = EngineConstants.POSITIVE_INFINITY;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
@@ -240,7 +241,7 @@ public class MoveTreeNode {
 		} else {	
 			//opponent children
 			if (Chess.getBoard().getPlayerIsWhite()) { //white opponent (max)
-				m_value = 999999999;
+				m_value = EngineConstants.POSITIVE_INFINITY;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.min(m_value, node.recursiveMinMax(alpha, beta));
@@ -250,7 +251,7 @@ public class MoveTreeNode {
 				}
 				
 			} else { //black opponent (min)
-				m_value = -999999999;
+				m_value = EngineConstants.NEGATIVE_INFINITY;
 				
 				for (MoveTreeNode node : m_children) {
 					m_value = Math.max(m_value, node.recursiveMinMax(alpha, beta));
